@@ -9,7 +9,7 @@ import (
 
 func TestHasher(t *testing.T) {
 
-	hasher := sha256.NewHash()
+	hasher := sha256.New()
 
 	input := "Hello Hash"
 	res := hasher.Hash(input)
@@ -19,7 +19,7 @@ func TestHasher(t *testing.T) {
 
 func TestCheckHasher(t *testing.T) {
 
-	hasher := sha256.NewHash()
+	hasher := sha256.New()
 
 	input := "Hello Hash"
 	inputHash := hasher.Hash(input)
