@@ -5,6 +5,7 @@ import (
 	"crypto/rand"
 	"crypto/rsa"
 	"crypto/sha256"
+	"crypto/x509"
 	"notary-public-online/internal/pkg/pairKey"
 )
 
@@ -13,16 +14,27 @@ type Crypto struct {
 	publicKey  *rsa.PublicKey
 }
 
-func New(privateKey *rsa.PrivateKey, publicKey *rsa.PublicKey) pairKey.CryptoImp {
-	return &Crypto{privateKey: privateKey, publicKey: publicKey}
+func New(privateKey string, publicKey string) pairKey.CryptoImp {
+
+	pb, errPr := x509.ParsePKCS1PublicKey([]byte(publicKey))
+	pr, errPu := x509.ParsePKCS1PrivateKey([]byte(privateKey))
+
+	if errPr != nil || errPu != nil {
+		panic("Error parsing key")
+	}
+
+	return &Crypto{privateKey: pr, publicKey: pb}
 }
 
-func PairKeyGenerator() (*rsa.PrivateKey, *rsa.PublicKey, error) {
-	privateKey, err := rsa.GenerateKey(rand.Reader, 2048)
+func PairKeyGenerator() (string, string, error) {
 
+	privateKey, err := rsa.GenerateKey(rand.Reader, 2048)
 	publicKey := privateKey.PublicKey
 
-	return privateKey, &publicKey, err
+	bytePr := x509.MarshalPKCS1PrivateKey(privateKey)
+	bytePu := x509.MarshalPKCS1PublicKey(&publicKey)
+
+	return string(bytePr), string(bytePu), err
 }
 
 func (c *Crypto) Signature(hashedInput *string) (string, error) {
