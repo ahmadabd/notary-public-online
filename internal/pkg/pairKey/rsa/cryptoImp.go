@@ -9,12 +9,12 @@ import (
 	"notary-public-online/internal/pkg/pairKey"
 )
 
-type Crypto struct {
+type CryptoImp struct {
 	privateKey *rsa.PrivateKey
 	publicKey  *rsa.PublicKey
 }
 
-func New(privateKey string, publicKey string) pairKey.CryptoImp {
+func New(privateKey string, publicKey string) pairKey.Crypto {
 
 	pb, errPr := x509.ParsePKCS1PublicKey([]byte(publicKey))
 	pr, errPu := x509.ParsePKCS1PrivateKey([]byte(privateKey))
@@ -23,7 +23,7 @@ func New(privateKey string, publicKey string) pairKey.CryptoImp {
 		panic("Error parsing key")
 	}
 
-	return &Crypto{privateKey: pr, publicKey: pb}
+	return &CryptoImp{privateKey: pr, publicKey: pb}
 }
 
 func PairKeyGenerator() (string, string, error) {
@@ -37,28 +37,28 @@ func PairKeyGenerator() (string, string, error) {
 	return string(bytePr), string(bytePu), err
 }
 
-func (c *Crypto) Signature(hashedInput *string) (string, error) {
+func (c *CryptoImp) Signature(hashedInput *[]byte) ([]byte, error) {
 
-	signature, err := rsa.SignPSS(rand.Reader, c.privateKey, crypto.SHA256, []byte(*hashedInput), nil)
+	signature, err := rsa.SignPSS(rand.Reader, c.privateKey, crypto.SHA256, *hashedInput, nil)
 
-	return string(signature), err
+	return signature, err
 }
 
-func (c *Crypto) VerifySignature(hashedInput *string, signature *string) bool {
-	if err := rsa.VerifyPSS(c.publicKey, crypto.SHA256, []byte(*hashedInput), []byte(*signature), nil); err != nil {
+func (c *CryptoImp) VerifySignature(hashedInput *[]byte, signature *[]byte) bool {
+	if err := rsa.VerifyPSS(c.publicKey, crypto.SHA256, *hashedInput, *signature, nil); err != nil {
 		return true
 	}
 
 	return false
 }
 
-func (c *Crypto) Encryption(input *string) (string, error) {
+func (c *CryptoImp) Encryption(input *string) (string, error) {
 	encrypted, err := rsa.EncryptOAEP(sha256.New(), rand.Reader, c.publicKey, []byte(*input), nil)
 
 	return string(encrypted), err
 }
 
-func (c *Crypto) Decryption(input *string) (string, error) {
+func (c *CryptoImp) Decryption(input *string) (string, error) {
 	decrypted, err := c.privateKey.Decrypt(nil, []byte(*input), &rsa.OAEPOptions{Hash: crypto.SHA256})
 
 	return string(decrypted), err
