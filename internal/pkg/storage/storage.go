@@ -1,6 +1,8 @@
 package storage
 
-import "os"
+import (
+	"os"
+)
 
 type Storage interface {
 	StoreFile(file *os.File) (string, error)

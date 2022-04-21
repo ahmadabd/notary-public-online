@@ -1,6 +1,8 @@
 package hash
 
-import "os"
+import (
+	"os"
+)
 
 type Hasher interface {
 	Hash(*os.File) ([]byte, error)

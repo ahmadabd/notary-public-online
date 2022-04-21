@@ -13,15 +13,17 @@ func New() storage.Storage {
 	return &storageImp{}
 }
 
+var baseDir = "/tmp/"
+
 func (s *storageImp) StoreFile(file *os.File) (string, error) {
 	content, err := ioutil.ReadFile(file.Name())
 	if err != nil {
 		return "", err
 	}
 
-	fileName := random.RandStringRunes(64)
+	fileName := random.RandStringRunes(8)
 
-	err = ioutil.WriteFile(fileName, content, 0644)
+	err = ioutil.WriteFile(baseDir+fileName, content, 0644)
 
 	if err != nil {
 		return "", err
@@ -31,5 +33,5 @@ func (s *storageImp) StoreFile(file *os.File) (string, error) {
 }
 
 func (s *storageImp) ReadFile(fileName string) (*os.File, error) {
-	return os.Open(fileName)
+	return os.Open(baseDir + fileName)
 }
