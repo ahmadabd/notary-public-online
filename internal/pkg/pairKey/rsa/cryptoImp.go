@@ -44,8 +44,8 @@ func (c *CryptoImp) Signature(hashedInput *[]byte) ([]byte, error) {
 	return signature, err
 }
 
-func (c *CryptoImp) VerifySignature(hashedInput *[]byte, signature *[]byte) bool {
-	if err := rsa.VerifyPSS(c.publicKey, crypto.SHA256, *hashedInput, *signature, nil); err != nil {
+func (c *CryptoImp) VerifySignature(signature *[]byte, hashedInput *[]byte) bool {
+	if err := rsa.VerifyPSS(c.publicKey, crypto.SHA256, *signature, *hashedInput, nil); err != nil {
 		return true
 	}
 

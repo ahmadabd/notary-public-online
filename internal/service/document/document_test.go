@@ -4,6 +4,7 @@ import (
 	"context"
 	"log"
 	"notary-public-online/internal/entity/model"
+	"notary-public-online/internal/pkg/storage/disk"
 	"notary-public-online/internal/service/document"
 	"notary-public-online/mocks"
 	"os"
@@ -46,6 +47,24 @@ func TestStoreDocument(t *testing.T) {
 
 	mockDB.EXPECT().CreateDocument(gomock.Any(), "doc name", "doc description", "fakeFile.txt", gomock.Any(), 1, false).Return(nil).Times(1)
 	mockStorage.EXPECT().StoreFile(file).Return("fakeFile.txt", nil).Times(1)
+
+	err := doc.StoreDocument(context.TODO(), file, "doc name", "doc description", 1)
+
+	assert.Nil(t, err)
+}
+
+func TestStoreDocumentIntegration(t *testing.T) {
+	teardownSuite := setupSuite(t)
+	defer teardownSuite(t)
+
+	storage := disk.New()
+
+	doc := document.New(mockDB, storage)
+
+	// file and file address
+	file, _ := os.Open("../../../mocks/fakeFile.txt")
+
+	mockDB.EXPECT().CreateDocument(gomock.Any(), "doc name", "doc description", gomock.Any(), gomock.Any(), 1, false).Return(nil).Times(1)
 
 	err := doc.StoreDocument(context.TODO(), file, "doc name", "doc description", 1)
 

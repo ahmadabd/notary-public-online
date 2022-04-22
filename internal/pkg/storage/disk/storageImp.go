@@ -5,6 +5,7 @@ import (
 	"notary-public-online/internal/pkg/random"
 	"notary-public-online/internal/pkg/storage"
 	"os"
+	"path/filepath"
 )
 
 type storageImp struct{}
@@ -21,7 +22,9 @@ func (s *storageImp) StoreFile(file *os.File) (string, error) {
 		return "", err
 	}
 
-	fileName := random.RandStringRunes(8)
+	extention := filepath.Ext(file.Name())
+
+	fileName := random.RandStringRunes(8) + extention
 
 	err = ioutil.WriteFile(baseDir+fileName, content, 0644)
 

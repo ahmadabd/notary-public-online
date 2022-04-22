@@ -1,4 +1,4 @@
-package userDocument
+package noatry
 
 import (
 	"context"
@@ -27,7 +27,7 @@ func (d *doc) GetNoatry(ctx context.Context, noatryId int) (model.Notary, error)
 
 func (d *doc) SignNoatry(ctx context.Context, noatryId int, userId int) error {
 
-	noatry, err := getNoatry(ctx, d, noatryId)
+	noatry, err := d.Db.GetNoatry(ctx, noatryId)
 	if err != nil {
 		return errors.New("noatry not found")
 	}
@@ -43,7 +43,7 @@ func (d *doc) SignNoatry(ctx context.Context, noatryId int, userId int) error {
 	}
 
 	if signedDoc, err := crypto.Signature(documentHash); err == nil {
-		if err := d.Db.CreateSignature(ctx, noatryId, userId, &signedDoc); err != nil {
+		if err := d.Db.CreateSignature(ctx, noatryId, userId, &signedDoc); err == nil {
 			return err
 		}
 	}
@@ -53,7 +53,7 @@ func (d *doc) SignNoatry(ctx context.Context, noatryId int, userId int) error {
 
 func (d *doc) VerifyNoatrySignature(ctx context.Context, userId int, noatryId int) (bool, error) {
 
-	noatry, err := getNoatry(ctx, d, noatryId)
+	noatry, err := d.Db.GetNoatry(ctx, noatryId)
 	if err != nil {
 		return false, errors.New("noatry not found")
 	}
@@ -76,7 +76,8 @@ func (d *doc) VerifyNoatrySignature(ctx context.Context, userId int, noatryId in
 		return false, errors.New("error in getting document signature")
 	}
 
-	verify := crypto.VerifySignature(documentHash, documentSignature)
+	// verify := crypto.VerifySignature(documentHash, documentSignature)
+	verify := crypto.VerifySignature(documentSignature, documentHash)
 
 	return verify, nil
 }
@@ -88,11 +89,6 @@ func (d *doc) VerifyNoatrySignature(ctx context.Context, userId int, noatryId in
 // func (d *doc) DocumentHashDecrypt(ctx context.Context, encryptedDocument string) (string, error) {
 // 	return "", nil
 // }
-
-func getNoatry(ctx context.Context, d *doc, noatryId int) (model.Notary, error) {
-
-	return d.Db.GetNoatry(ctx, noatryId)
-}
 
 func getUserCrypto(ctx context.Context, d *doc, userId int) (pairKey.Crypto, error) {
 	privateKey, publicKey, err := d.Db.GetUserKeys(ctx, userId)
