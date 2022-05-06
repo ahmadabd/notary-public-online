@@ -77,7 +77,7 @@ func TestDocumentDetails(t *testing.T) {
 
 	doc := document.New(mockDB, mockStorage)
 
-	mockDB.EXPECT().GetDocument(gomock.Any(), 1).Return(&model.Document{}, nil).Times(1)
+	mockDB.EXPECT().GetDocument(gomock.Any(), 1).Return(model.Document{}, nil).Times(1)
 
 	_, err := doc.DocumentDetails(context.TODO(), 1)
 

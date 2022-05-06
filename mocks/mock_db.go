@@ -36,7 +36,7 @@ func (m *MockDB) EXPECT() *MockDBMockRecorder {
 }
 
 // CreateDocument mocks base method.
-func (m *MockDB) CreateDocument(arg0 context.Context, arg1, arg2, arg3 string, arg4 []byte, arg5 int, arg6 bool) error {
+func (m *MockDB) CreateDocument(arg0 context.Context, arg1, arg2, arg3 string, arg4 *[]byte, arg5 int, arg6 bool) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateDocument", arg0, arg1, arg2, arg3, arg4, arg5, arg6)
 	ret0, _ := ret[0].(error)
@@ -78,10 +78,10 @@ func (mr *MockDBMockRecorder) CreateSignature(arg0, arg1, arg2, arg3 interface{}
 }
 
 // GetDocument mocks base method.
-func (m *MockDB) GetDocument(arg0 context.Context, arg1 int) (*model.Document, error) {
+func (m *MockDB) GetDocument(arg0 context.Context, arg1 int) (model.Document, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetDocument", arg0, arg1)
-	ret0, _ := ret[0].(*model.Document)
+	ret0, _ := ret[0].(model.Document)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

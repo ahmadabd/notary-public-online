@@ -6,9 +6,9 @@ import (
 )
 
 type document interface {
-	CreateDocument(ctx context.Context, name string, description string, fileAddress string, documentsHash []byte, user int, active bool) error
+	CreateDocument(ctx context.Context, name string, description string, fileAddress string, documentsHash *[]byte, userId int, active bool) error
 
-	GetDocument(ctx context.Context, documentId int) (*model.Document, error)
+	GetDocument(ctx context.Context, documentId int) (model.Document, error)
 
 	GetDocumentAddress(ctx context.Context, documentId int) (string, error)
 

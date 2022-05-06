@@ -33,10 +33,10 @@ func (d *documentImp) StoreDocument(ctx context.Context, document *os.File, name
 		return err
 	}
 
-	return d.Db.CreateDocument(ctx, name, description, fileAddress, documentsHash, userId, false)
+	return d.Db.CreateDocument(ctx, name, description, fileAddress, &documentsHash, userId, false)
 }
 
-func (d *documentImp) DocumentDetails(ctx context.Context, documentId int) (*model.Document, error) {
+func (d *documentImp) DocumentDetails(ctx context.Context, documentId int) (model.Document, error) {
 	return d.Db.GetDocument(ctx, documentId)
 }
 
