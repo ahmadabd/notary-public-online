@@ -2,7 +2,6 @@ package gorm
 
 import (
 	"fmt"
-	"log"
 	"notary-public-online/internal/configs/yaml"
 	"notary-public-online/internal/repository"
 
@@ -20,7 +19,6 @@ func SetupDatabase(cfg *yaml.Config) (repository.DB, error) {
 	// db.AutoMigrate()
 
 	if err != nil {
-		log.Println("error while connecting to database: ", err)
 		return nil, err
 	}
 

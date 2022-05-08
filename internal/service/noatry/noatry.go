@@ -6,7 +6,7 @@ import (
 )
 
 type Noatry interface {
-	CreateNoatry(ctx context.Context, documentId int, userId int, partnerCount int, completed bool) error
+	CreateNoatry(ctx context.Context, documentId int, userId int, partnerCount int, completed bool) (model.Notary, error)
 
 	GetNoatry(ctx context.Context, noatryId int) (model.Notary, error)
 

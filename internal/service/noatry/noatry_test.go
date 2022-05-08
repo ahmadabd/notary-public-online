@@ -42,11 +42,18 @@ func TestCreateNoatry(t *testing.T) {
 	teardownSuite := setupSuite(t)
 	defer teardownSuite(t)
 
-	mockDB.EXPECT().CreateNoatry(gomock.Any(), 1, 1, 1, false).Return(nil).Times(1)
+	notary := model.Notary{
+		DocumentId:   1,
+		UserId:       1,
+		PartnerCount: 1,
+		Completed:    false,
+	}
+
+	mockDB.EXPECT().CreateNoatry(gomock.Any(), notary.DocumentId, notary.UserId, notary.PartnerCount, notary.Completed).Return(notary, nil).Times(1)
 
 	noatry := noatry.New(mockDB)
 
-	err := noatry.CreateNoatry(context.TODO(), 1, 1, 1, false)
+	_, err := noatry.CreateNoatry(context.TODO(), 1, 1, 1, false)
 
 	assert.Nil(t, err)
 }
@@ -76,13 +83,19 @@ func TestSignNoatry(t *testing.T) {
 		Completed:    false,
 	}
 
+	signature := model.Signature{
+		UserId:         1,
+		NotaryId:       noatryModel.Id,
+		SignedDocument: fileHash,
+	}
+
 	// generate pairKey for user
 	pr, pu, _ := rsa.PairKeyGenerator()
 
 	mockDB.EXPECT().GetUserKeys(gomock.Any(), 1).Return(pr, pu, nil).Times(1)
 	mockDB.EXPECT().GetDocumentHash(gomock.Any(), 1).Return(&fileHash, nil).Times(1)
 	mockDB.EXPECT().GetNoatry(gomock.Any(), 1).Return(noatryModel, nil).Times(1)
-	mockDB.EXPECT().CreateSignature(gomock.Any(), 1, 1, gomock.Any()).Return(nil).Times(1)
+	mockDB.EXPECT().CreateSignature(gomock.Any(), 1, 1, gomock.Any()).Return(signature, nil).Times(1)
 
 	noatry := noatry.New(mockDB)
 
@@ -90,7 +103,6 @@ func TestSignNoatry(t *testing.T) {
 
 	assert.Nil(t, err)
 }
-
 
 func TestVerifyNoatrySignature(t *testing.T) {
 	teardownSuite := setupSuite(t)

@@ -36,11 +36,12 @@ func (m *MockDB) EXPECT() *MockDBMockRecorder {
 }
 
 // CreateDocument mocks base method.
-func (m *MockDB) CreateDocument(arg0 context.Context, arg1, arg2, arg3 string, arg4 *[]byte, arg5 int, arg6 bool) error {
+func (m *MockDB) CreateDocument(arg0 context.Context, arg1, arg2, arg3 string, arg4 *[]byte, arg5 int, arg6 bool) (model.Document, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateDocument", arg0, arg1, arg2, arg3, arg4, arg5, arg6)
-	ret0, _ := ret[0].(error)
-	return ret0
+	ret0, _ := ret[0].(model.Document)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
 }
 
 // CreateDocument indicates an expected call of CreateDocument.
@@ -50,11 +51,12 @@ func (mr *MockDBMockRecorder) CreateDocument(arg0, arg1, arg2, arg3, arg4, arg5,
 }
 
 // CreateNoatry mocks base method.
-func (m *MockDB) CreateNoatry(arg0 context.Context, arg1, arg2, arg3 int, arg4 bool) error {
+func (m *MockDB) CreateNoatry(arg0 context.Context, arg1, arg2, arg3 int, arg4 bool) (model.Notary, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateNoatry", arg0, arg1, arg2, arg3, arg4)
-	ret0, _ := ret[0].(error)
-	return ret0
+	ret0, _ := ret[0].(model.Notary)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
 }
 
 // CreateNoatry indicates an expected call of CreateNoatry.
@@ -64,11 +66,12 @@ func (mr *MockDBMockRecorder) CreateNoatry(arg0, arg1, arg2, arg3, arg4 interfac
 }
 
 // CreateSignature mocks base method.
-func (m *MockDB) CreateSignature(arg0 context.Context, arg1, arg2 int, arg3 *[]byte) error {
+func (m *MockDB) CreateSignature(arg0 context.Context, arg1, arg2 int, arg3 *[]byte) (model.Signature, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateSignature", arg0, arg1, arg2, arg3)
-	ret0, _ := ret[0].(error)
-	return ret0
+	ret0, _ := ret[0].(model.Signature)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
 }
 
 // CreateSignature indicates an expected call of CreateSignature.

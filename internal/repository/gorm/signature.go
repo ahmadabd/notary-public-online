@@ -5,7 +5,7 @@ import (
 	"notary-public-online/internal/entity/model"
 )
 
-func (db *Gorm) CreateSignature(ctx context.Context, noatryId int, userId int, documentSignature *[]byte) error {
+func (db *Gorm) CreateSignature(ctx context.Context, noatryId int, userId int, documentSignature *[]byte) (model.Signature, error) {
 
 	signature := mapFromSignatureEntity(model.Signature{
 		NotaryId:       noatryId,
@@ -14,10 +14,10 @@ func (db *Gorm) CreateSignature(ctx context.Context, noatryId int, userId int, d
 	})
 
 	if err := db.Db.WithContext(ctx).Create(&signature).Error; err != nil {
-		return err
+		return model.Signature{}, err
 	}
 
-	return nil
+	return mapToSignatureEntity(signature), nil
 }
 
 func (db *Gorm) GetSignatures(ctx context.Context, noatryId int, userId int) (*[]byte, error) {

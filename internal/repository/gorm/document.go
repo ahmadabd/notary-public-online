@@ -5,7 +5,7 @@ import (
 	"notary-public-online/internal/entity/model"
 )
 
-func (db *Gorm) CreateDocument(ctx context.Context, name string, description string, fileAddress string, documentsHash *[]byte, userId int, active bool) error {
+func (db *Gorm) CreateDocument(ctx context.Context, name string, description string, fileAddress string, documentsHash *[]byte, userId int, active bool) (model.Document, error) {
 	document := mapFromDocumentEntity(model.Document{
 		Name:        name,
 		Description: description,
@@ -15,17 +15,17 @@ func (db *Gorm) CreateDocument(ctx context.Context, name string, description str
 		Active:      active,
 	})
 
-	if err := db.Db.Create(&document).Error; err != nil {
-		return err
+	if err := db.Db.WithContext(ctx).Create(&document).Error; err != nil {
+		return model.Document{}, err
 	}
 
-	return nil
+	return mapToDocumentEntity(document), nil
 }
 
 func (db *Gorm) GetDocument(ctx context.Context, documentId int) (model.Document, error) {
 	var document Document
 
-	if err := db.Db.Where("id", documentId).First(&document).Error; err != nil {
+	if err := db.Db.WithContext(ctx).Where("id", documentId).First(&document).Error; err != nil {
 		return model.Document{}, err
 	}
 
@@ -35,7 +35,7 @@ func (db *Gorm) GetDocument(ctx context.Context, documentId int) (model.Document
 func (db *Gorm) GetDocumentAddress(ctx context.Context, documentId int) (string, error) {
 	var document Document
 
-	if err := db.Db.Select("FileAddress").Where("id", documentId).First(&document).Error; err != nil {
+	if err := db.Db.WithContext(ctx).Select("FileAddress").Where("id", documentId).First(&document).Error; err != nil {
 		return "", err
 	}
 
@@ -45,7 +45,7 @@ func (db *Gorm) GetDocumentAddress(ctx context.Context, documentId int) (string,
 func (db *Gorm) GetDocumentHash(ctx context.Context, documentId int) (*[]byte, error) {
 	var document Document
 
-	if err := db.Db.Select("Hash").Where("id", documentId).First(&document).Error; err != nil {
+	if err := db.Db.WithContext(ctx).Select("Hash").Where("id", documentId).First(&document).Error; err != nil {
 		return nil, err
 	}
 

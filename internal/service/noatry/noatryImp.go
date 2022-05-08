@@ -17,7 +17,7 @@ func New(db repository.DB) Noatry {
 	return &doc{Db: db}
 }
 
-func (d *doc) CreateNoatry(ctx context.Context, documentId int, userId int, partnerCount int, completed bool) error {
+func (d *doc) CreateNoatry(ctx context.Context, documentId int, userId int, partnerCount int, completed bool) (model.Notary, error) {
 	return d.Db.CreateNoatry(ctx, documentId, userId, partnerCount, completed)
 }
 
@@ -43,7 +43,7 @@ func (d *doc) SignNoatry(ctx context.Context, noatryId int, userId int) error {
 	}
 
 	if signedDoc, err := crypto.Signature(documentHash); err == nil {
-		if err := d.Db.CreateSignature(ctx, noatryId, userId, &signedDoc); err == nil {
+		if _, err := d.Db.CreateSignature(ctx, noatryId, userId, &signedDoc); err == nil {
 			return err
 		}
 	}

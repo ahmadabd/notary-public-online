@@ -6,6 +6,7 @@ import (
 	"log"
 	"math/rand"
 	"notary-public-online/internal/configs/yaml"
+	"notary-public-online/internal/repository/gorm"
 	"os"
 	"path/filepath"
 
@@ -35,5 +36,10 @@ func serve(c *cli.Context) error {
 		log.Println(err)
 	}
 
-	
+	db, err := gorm.SetupDatabase(cfg)
+	if err != nil {
+		log.Println("error while connecting to database: ", err)
+	}
+
+	service
 }
