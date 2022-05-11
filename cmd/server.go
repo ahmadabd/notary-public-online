@@ -6,7 +6,10 @@ import (
 	"log"
 	"math/rand"
 	"notary-public-online/internal/configs/yaml"
+	"notary-public-online/internal/pkg/storage/disk"
 	"notary-public-online/internal/repository/gorm"
+	"notary-public-online/internal/service/document"
+	"notary-public-online/internal/service/noatry"
 	"os"
 	"path/filepath"
 
@@ -41,5 +44,6 @@ func serve(c *cli.Context) error {
 		log.Println("error while connecting to database: ", err)
 	}
 
-	service
+	documentService := document.New(db, disk.New())
+	noatryService := noatry.New(db)
 }
