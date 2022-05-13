@@ -26,17 +26,6 @@ func New(privateKey string, publicKey string) pairKey.Crypto {
 	return &CryptoImp{privateKey: pr, publicKey: pb}
 }
 
-func PairKeyGenerator() (string, string, error) {
-
-	privateKey, err := rsa.GenerateKey(rand.Reader, 2048)
-	publicKey := privateKey.PublicKey
-
-	bytePr := x509.MarshalPKCS1PrivateKey(privateKey)
-	bytePu := x509.MarshalPKCS1PublicKey(&publicKey)
-
-	return string(bytePr), string(bytePu), err
-}
-
 func (c *CryptoImp) Signature(hashedInput *[]byte) ([]byte, error) {
 
 	signature, err := rsa.SignPSS(rand.Reader, c.privateKey, crypto.SHA256, *hashedInput, nil)

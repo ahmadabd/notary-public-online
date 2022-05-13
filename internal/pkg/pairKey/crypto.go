@@ -9,3 +9,8 @@ type Crypto interface {
 	
 	Decryption(*string) (string, error)    		// Unsign secured document using pr
 }
+
+//go:generate $HOME/go_projects/bin/mockgen -destination=../../../mocks/mock_keys.go -package=mocks notary-public-online/internal/pkg/pairKey Keys
+type Keys interface {
+	PairKeyGenerator() (string, string, error)
+}

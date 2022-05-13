@@ -90,7 +90,8 @@ func TestSignNoatry(t *testing.T) {
 	}
 
 	// generate pairKey for user
-	pr, pu, _ := rsa.PairKeyGenerator()
+	key := rsa.NewKeys()
+	pr, pu, _ := key.PairKeyGenerator()
 
 	mockDB.EXPECT().GetUserKeys(gomock.Any(), 1).Return(pr, pu, nil).Times(1)
 	mockDB.EXPECT().GetDocumentHash(gomock.Any(), 1).Return(&fileHash, nil).Times(1)
@@ -117,7 +118,8 @@ func TestVerifyNoatrySignature(t *testing.T) {
 	}
 
 	// generate pairKey for user
-	pr, pu, _ := rsa.PairKeyGenerator()
+	key := rsa.NewKeys()
+	pr, pu, _ := key.PairKeyGenerator()
 
 	// sign document
 	crypto := rsa.New(pr, pu)

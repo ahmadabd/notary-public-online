@@ -1,7 +1,12 @@
 package user
 
-type UserImp interface {
-	Register(personalInfo []string, username string, password string) (string, error)
+import (
+	"context"
+	"notary-public-online/internal/entity/model"
+)
 
-	Login(username string, password string) (string, error)
+type UserImp interface {
+	Register(ctx context.Context, user model.User) (model.User, error)
+
+	Login(ctx context.Context, email string, password string) (bool, error)
 }

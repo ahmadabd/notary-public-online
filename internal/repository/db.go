@@ -29,8 +29,15 @@ type signature interface {
 
 type user interface {
 	GetUserKeys(ctx context.Context, userId int) (string, string, error)
+
+	CreateUser(ctx context.Context, userInp *model.User) (model.User, error)
+
+	GetUserWithEmail(ctx context.Context, email string) (model.User, error)
+
+	CheckUserExistanceWithEmail(ctx context.Context, email string) (bool, error)
 }
 
+//go:generate $HOME/go_projects/bin/mockgen -destination=../../mocks/mock_db.go -package=mocks notary-public-online/internal/repository DB
 type DB interface {
 	document
 	notary

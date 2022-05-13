@@ -35,6 +35,21 @@ func (m *MockDB) EXPECT() *MockDBMockRecorder {
 	return m.recorder
 }
 
+// CheckUserExistanceWithEmail mocks base method.
+func (m *MockDB) CheckUserExistanceWithEmail(arg0 context.Context, arg1 string) (bool, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CheckUserExistanceWithEmail", arg0, arg1)
+	ret0, _ := ret[0].(bool)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CheckUserExistanceWithEmail indicates an expected call of CheckUserExistanceWithEmail.
+func (mr *MockDBMockRecorder) CheckUserExistanceWithEmail(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CheckUserExistanceWithEmail", reflect.TypeOf((*MockDB)(nil).CheckUserExistanceWithEmail), arg0, arg1)
+}
+
 // CreateDocument mocks base method.
 func (m *MockDB) CreateDocument(arg0 context.Context, arg1, arg2, arg3 string, arg4 *[]byte, arg5 int, arg6 bool) (model.Document, error) {
 	m.ctrl.T.Helper()
@@ -78,6 +93,21 @@ func (m *MockDB) CreateSignature(arg0 context.Context, arg1, arg2 int, arg3 *[]b
 func (mr *MockDBMockRecorder) CreateSignature(arg0, arg1, arg2, arg3 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateSignature", reflect.TypeOf((*MockDB)(nil).CreateSignature), arg0, arg1, arg2, arg3)
+}
+
+// CreateUser mocks base method.
+func (m *MockDB) CreateUser(arg0 context.Context, arg1 *model.User) (model.User, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateUser", arg0, arg1)
+	ret0, _ := ret[0].(model.User)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CreateUser indicates an expected call of CreateUser.
+func (mr *MockDBMockRecorder) CreateUser(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateUser", reflect.TypeOf((*MockDB)(nil).CreateUser), arg0, arg1)
 }
 
 // GetDocument mocks base method.
@@ -169,4 +199,19 @@ func (m *MockDB) GetUserKeys(arg0 context.Context, arg1 int) (string, string, er
 func (mr *MockDBMockRecorder) GetUserKeys(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUserKeys", reflect.TypeOf((*MockDB)(nil).GetUserKeys), arg0, arg1)
+}
+
+// GetUserWithEmail mocks base method.
+func (m *MockDB) GetUserWithEmail(arg0 context.Context, arg1 string) (model.User, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetUserWithEmail", arg0, arg1)
+	ret0, _ := ret[0].(model.User)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetUserWithEmail indicates an expected call of GetUserWithEmail.
+func (mr *MockDBMockRecorder) GetUserWithEmail(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUserWithEmail", reflect.TypeOf((*MockDB)(nil).GetUserWithEmail), arg0, arg1)
 }

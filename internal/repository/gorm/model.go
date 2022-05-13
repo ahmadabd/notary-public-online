@@ -10,6 +10,7 @@ type User struct {
 	FirstName   string    `json:"firstName" binding:"required" gorm:"type:varchar(32)"`
 	LastName    string    `json:"lastName" binding:"required" gorm:"type:varchar(32)"`
 	Email       string    `json:"email" binding:"required,email" gorm:"type:varchar(32)"`
+	Password    string    `json:"password" binding:"required" gorm:"type:varchar(32)"`
 	Citizenship string    `json:"citizenship" binding:"required" gorm:"type:varchar(32)"`
 	PrivateKey  string    `json:"privateKey" gorm:"type:varchar(255);UNIQUE"`
 	PublicKey   string    `json:"publicKey" gorm:"type:varchar(255);UNIQUE"`
@@ -23,6 +24,7 @@ func mapFromUserEntity(user model.User) User {
 		FirstName:   user.FirstName,
 		LastName:    user.LastName,
 		Email:       user.Email,
+		Password:    user.Password,
 		Citizenship: user.Citizenship,
 		PrivateKey:  user.PrivateKey,
 		PublicKey:   user.PublicKey,
@@ -37,6 +39,7 @@ func MapToUserEntity(user User) model.User {
 		FirstName:   user.FirstName,
 		LastName:    user.LastName,
 		Email:       user.Email,
+		Password:    user.Password,
 		Citizenship: user.Citizenship,
 		PrivateKey:  user.PrivateKey,
 		PublicKey:   user.PublicKey,

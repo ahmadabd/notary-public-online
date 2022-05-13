@@ -10,7 +10,8 @@ import (
 )
 
 func TestPairKeyGenerate(t *testing.T) {
-	pr, pu, err := rsa.PairKeyGenerator()
+	key := rsa.NewKeys()
+	pr, pu, err := key.PairKeyGenerator()
 
 	assert.Nil(t, err)
 	assert.NotNil(t, pr)
@@ -30,7 +31,8 @@ func createNewFile() *os.File {
 }
 
 func TestSign(t *testing.T) {
-	pr, pu, _ := rsa.PairKeyGenerator()
+	key := rsa.NewKeys()
+	pr, pu, _ := key.PairKeyGenerator()
 	crypto := rsa.New(pr, pu)
 
 	input := createNewFile()
@@ -46,7 +48,8 @@ func TestSign(t *testing.T) {
 }
 
 func TestSignVerification(t *testing.T) {
-	pr, pu, _ := rsa.PairKeyGenerator()
+	key := rsa.NewKeys()
+	pr, pu, _ := key.PairKeyGenerator()
 	crypto := rsa.New(pr, pu)
 
 	input := createNewFile()
@@ -65,7 +68,8 @@ func TestSignVerification(t *testing.T) {
 }
 
 func TestEncryption(t *testing.T) {
-	pr, pu, _ := rsa.PairKeyGenerator()
+	key := rsa.NewKeys()
+	pr, pu, _ := key.PairKeyGenerator()
 	crypto := rsa.New(pr, pu)
 
 	input := "Hello World"
@@ -76,7 +80,8 @@ func TestEncryption(t *testing.T) {
 }
 
 func TestDecryption(t *testing.T) {
-	pr, pu, _ := rsa.PairKeyGenerator()
+	key := rsa.NewKeys()
+	pr, pu, _ := key.PairKeyGenerator()
 	crypto := rsa.New(pr, pu)
 
 	input := "Hello World"
