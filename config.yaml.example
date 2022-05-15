@@ -1,0 +1,10 @@
+server:
+  port:
+database:
+  host:
+  port:
+  user:
+  password:
+  name:
+app:
+  mode:

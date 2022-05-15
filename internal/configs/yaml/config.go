@@ -13,6 +13,7 @@ type (
 	Config struct {
 		Server   Server   `yaml:"server"`
 		Database Database `yaml:"database"`
+		App      App      `yaml:"app"`
 	}
 
 	Server struct {
@@ -25,6 +26,10 @@ type (
 		User     string `yaml:"user"`
 		Password string `yaml:"password"`
 		Name     string `yaml:"name"`
+	}
+
+	App struct {
+		Mode string `yaml:"mode"`
 	}
 )
 

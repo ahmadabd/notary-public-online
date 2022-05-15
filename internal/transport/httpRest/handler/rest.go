@@ -3,7 +3,7 @@ package handler
 import (
 	"fmt"
 	"notary-public-online/internal/configs/yaml"
-	"notary-public-online/internal/service/document"
+	"notary-public-online/internal/service/user"
 	"notary-public-online/internal/transport/httpRest"
 
 	"github.com/gin-gonic/gin"
@@ -14,18 +14,18 @@ type rest struct {
 	handler *handler
 }
 
-func New(docServ document.Document) httpRest.Rest {
+func New(userServ user.User) httpRest.Rest {
 	return &rest{
 		gin: gin.Default(),
 		handler: &handler{
-			docServ: docServ,
+			userServ: userServ,
 		},
 	}
 }
 
 func (r *rest) Start(cfg *yaml.Config) error {
 
-	r.routes("document")
+	r.routes("api")
 
 	return r.gin.Run(serverConfig(cfg))
 }

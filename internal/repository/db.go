@@ -28,7 +28,6 @@ type signature interface {
 }
 
 type user interface {
-	GetUserKeys(ctx context.Context, userId int) (string, string, error)
 
 	CreateUser(ctx context.Context, userInp *model.User) (model.User, error)
 

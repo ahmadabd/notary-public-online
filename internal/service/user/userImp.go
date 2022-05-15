@@ -10,17 +10,17 @@ import (
 	"notary-public-online/internal/repository"
 )
 
-type user struct {
+type userImp struct {
 	Db       repository.DB
 	Key      pairKey.Keys
 	PassHash passwordHash.PasswordHash
 }
 
-func New(db repository.DB, keys pairKey.Keys, passHash passwordHash.PasswordHash) UserImp {
-	return &user{Db: db, Key: keys, PassHash: passHash}
+func New(db repository.DB, keys pairKey.Keys, passHash passwordHash.PasswordHash) User {
+	return &userImp{Db: db, Key: keys, PassHash: passHash}
 }
 
-func (u *user) Register(ctx context.Context, user model.User) (model.User, error) {
+func (u *userImp) Register(ctx context.Context, user model.User) (model.User, error) {
 
 	// check user with this email dosent exist
 	email := user.Email
@@ -35,15 +35,12 @@ func (u *user) Register(ctx context.Context, user model.User) (model.User, error
 	password, _ := u.PassHash.HashPassword(user.Password)
 	user.Password = password
 
-	prKey, puKey, err := u.Key.PairKeyGenerator()
+	_, _, err := u.Key.PairKeyGenerator(email)
 
 	if err != nil {
 		log.Panicln("Generating pairKey failed")
 		return model.User{}, err
 	}
-
-	user.PrivateKey = prKey
-	user.PublicKey = puKey
 
 	user, err = u.Db.CreateUser(ctx, &user)
 
@@ -54,7 +51,7 @@ func (u *user) Register(ctx context.Context, user model.User) (model.User, error
 	return user, nil
 }
 
-func (u *user) Login(ctx context.Context, email string, password string) (bool, error) {
+func (u *userImp) Login(ctx context.Context, email string, password string) (bool, error) {
 	user, err := u.Db.GetUserWithEmail(ctx, email)
 	if err != nil {
 		return false, err

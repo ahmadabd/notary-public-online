@@ -12,8 +12,6 @@ type User struct {
 	Email       string    `json:"email" binding:"required,email" gorm:"type:varchar(32)"`
 	Password    string    `json:"password" binding:"required" gorm:"type:varchar(32)"`
 	Citizenship string    `json:"citizenship" binding:"required" gorm:"type:varchar(32)"`
-	PrivateKey  string    `json:"privateKey" gorm:"type:varchar(255);UNIQUE"`
-	PublicKey   string    `json:"publicKey" gorm:"type:varchar(255);UNIQUE"`
 	CreatedAt   time.Time `json:"created_at" gorm:"default:CURRENT_TIMESTAMP"`
 	UpdatedAt   time.Time `json:"updated_at" gorm:"default:CURRENT_TIMESTAMP"`
 }
@@ -26,8 +24,6 @@ func mapFromUserEntity(user model.User) User {
 		Email:       user.Email,
 		Password:    user.Password,
 		Citizenship: user.Citizenship,
-		PrivateKey:  user.PrivateKey,
-		PublicKey:   user.PublicKey,
 		CreatedAt:   user.CreatedAt,
 		UpdatedAt:   user.UpdatedAt,
 	}
@@ -41,8 +37,6 @@ func MapToUserEntity(user User) model.User {
 		Email:       user.Email,
 		Password:    user.Password,
 		Citizenship: user.Citizenship,
-		PrivateKey:  user.PrivateKey,
-		PublicKey:   user.PublicKey,
 		CreatedAt:   user.CreatedAt,
 		UpdatedAt:   user.UpdatedAt,
 	}

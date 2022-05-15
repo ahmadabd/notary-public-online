@@ -91,9 +91,9 @@ func TestSignNoatry(t *testing.T) {
 
 	// generate pairKey for user
 	key := rsa.NewKeys()
-	pr, pu, _ := key.PairKeyGenerator()
+	pr, pu, _ := key.PairKeyGenerator("test@gmail.com")
 
-	mockDB.EXPECT().GetUserKeys(gomock.Any(), 1).Return(pr, pu, nil).Times(1)
+	// mockDB.EXPECT().GetUserKeys(gomock.Any(), 1).Return(pr, pu, nil).Times(1)
 	mockDB.EXPECT().GetDocumentHash(gomock.Any(), 1).Return(&fileHash, nil).Times(1)
 	mockDB.EXPECT().GetNoatry(gomock.Any(), 1).Return(noatryModel, nil).Times(1)
 	mockDB.EXPECT().CreateSignature(gomock.Any(), 1, 1, gomock.Any()).Return(signature, nil).Times(1)
@@ -119,13 +119,13 @@ func TestVerifyNoatrySignature(t *testing.T) {
 
 	// generate pairKey for user
 	key := rsa.NewKeys()
-	pr, pu, _ := key.PairKeyGenerator()
+	pr, pu, _ := key.PairKeyGenerator("test@gmail.com")
 
 	// sign document
 	crypto := rsa.New(pr, pu)
 	signedDoc, _ := crypto.Signature(&fileHash)
 
-	mockDB.EXPECT().GetUserKeys(gomock.Any(), 1).Return(pr, pu, nil).Times(1)
+	// mockDB.EXPECT().GetUserKeys(gomock.Any(), 1).Return(pr, pu, nil).Times(1)
 	mockDB.EXPECT().GetNoatry(gomock.Any(), 1).Return(noatryModel, nil).Times(1)
 	mockDB.EXPECT().GetDocumentHash(gomock.Any(), 1).Return(&fileHash, nil).Times(1)
 	mockDB.EXPECT().GetSignatures(gomock.Any(), 1, 1).Return(&signedDoc, nil).Times(1)

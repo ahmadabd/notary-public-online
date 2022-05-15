@@ -91,7 +91,7 @@ func (d *doc) VerifyNoatrySignature(ctx context.Context, userId int, noatryId in
 // }
 
 func getUserCrypto(ctx context.Context, d *doc, userId int) (pairKey.Crypto, error) {
-	privateKey, publicKey, err := d.Db.GetUserKeys(ctx, userId)
+	// privateKey, publicKey, err := d.Db.GetUserKeys(ctx, userId)
 
 	if err != nil {
 		return nil, errors.New("user not found")

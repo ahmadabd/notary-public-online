@@ -34,17 +34,17 @@ func (m *MockKeys) EXPECT() *MockKeysMockRecorder {
 }
 
 // PairKeyGenerator mocks base method.
-func (m *MockKeys) PairKeyGenerator() (string, string, error) {
+func (m *MockKeys) PairKeyGenerator(arg0 string) ([]byte, []byte, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "PairKeyGenerator")
-	ret0, _ := ret[0].(string)
-	ret1, _ := ret[1].(string)
+	ret := m.ctrl.Call(m, "PairKeyGenerator", arg0)
+	ret0, _ := ret[0].([]byte)
+	ret1, _ := ret[1].([]byte)
 	ret2, _ := ret[2].(error)
 	return ret0, ret1, ret2
 }
 
 // PairKeyGenerator indicates an expected call of PairKeyGenerator.
-func (mr *MockKeysMockRecorder) PairKeyGenerator() *gomock.Call {
+func (mr *MockKeysMockRecorder) PairKeyGenerator(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PairKeyGenerator", reflect.TypeOf((*MockKeys)(nil).PairKeyGenerator))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PairKeyGenerator", reflect.TypeOf((*MockKeys)(nil).PairKeyGenerator), arg0)
 }

@@ -185,22 +185,6 @@ func (mr *MockDBMockRecorder) GetSignatures(arg0, arg1, arg2 interface{}) *gomoc
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetSignatures", reflect.TypeOf((*MockDB)(nil).GetSignatures), arg0, arg1, arg2)
 }
 
-// GetUserKeys mocks base method.
-func (m *MockDB) GetUserKeys(arg0 context.Context, arg1 int) (string, string, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetUserKeys", arg0, arg1)
-	ret0, _ := ret[0].(string)
-	ret1, _ := ret[1].(string)
-	ret2, _ := ret[2].(error)
-	return ret0, ret1, ret2
-}
-
-// GetUserKeys indicates an expected call of GetUserKeys.
-func (mr *MockDBMockRecorder) GetUserKeys(arg0, arg1 interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUserKeys", reflect.TypeOf((*MockDB)(nil).GetUserKeys), arg0, arg1)
-}
-
 // GetUserWithEmail mocks base method.
 func (m *MockDB) GetUserWithEmail(arg0 context.Context, arg1 string) (model.User, error) {
 	m.ctrl.T.Helper()

@@ -1,14 +1,14 @@
 package passbcrypt
 
 import (
-	passwordhash "notary-public-online/internal/pkg/passwordHash"
+	"notary-public-online/internal/pkg/passwordHash"
 
 	"golang.org/x/crypto/bcrypt"
 )
 
 type passwordHashImp struct{}
 
-func New() passwordhash.PasswordHash {
+func New() passwordHash.PasswordHash {
 	return &passwordHashImp{}
 }
 

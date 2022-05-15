@@ -54,10 +54,8 @@ func TestRegister(t *testing.T) {
 
 	checkUserExistanceMK := mockDB.EXPECT().CheckUserExistanceWithEmail(gomock.Any(), userInp.Email).Return(false, nil).Times(1)
 	passHashMK := mockPassHash.EXPECT().HashPassword(userInp.Password).Return(passHash, nil).After(checkUserExistanceMK).Times(1)
-	pairKeyMK := mockPairKey.EXPECT().PairKeyGenerator().Return(privateKey, publicKey, nil).After(passHashMK).Times(1)
+	pairKeyMK := mockPairKey.EXPECT().PairKeyGenerator(userInp.Email).Return([]byte(privateKey), []byte(publicKey), nil).After(passHashMK).Times(1)
 	mockDB.EXPECT().CreateUser(gomock.Any(), &userInp).Return(func() model.User {
-		userInp.PrivateKey = privateKey
-		userInp.PublicKey = publicKey
 		userInp.Password = passHash
 		return userInp
 	}(), nil).After(pairKeyMK).Times(1)

@@ -11,7 +11,7 @@ import (
 
 func TestPairKeyGenerate(t *testing.T) {
 	key := rsa.NewKeys()
-	pr, pu, err := key.PairKeyGenerator()
+	pr, pu, err := key.PairKeyGenerator("test@gmail.com")
 
 	assert.Nil(t, err)
 	assert.NotNil(t, pr)
@@ -32,7 +32,7 @@ func createNewFile() *os.File {
 
 func TestSign(t *testing.T) {
 	key := rsa.NewKeys()
-	pr, pu, _ := key.PairKeyGenerator()
+	pr, pu, _ := key.PairKeyGenerator("test@gmail.com")
 	crypto := rsa.New(pr, pu)
 
 	input := createNewFile()
@@ -49,7 +49,7 @@ func TestSign(t *testing.T) {
 
 func TestSignVerification(t *testing.T) {
 	key := rsa.NewKeys()
-	pr, pu, _ := key.PairKeyGenerator()
+	pr, pu, _ := key.PairKeyGenerator("test@gmail.com")
 	crypto := rsa.New(pr, pu)
 
 	input := createNewFile()
@@ -69,7 +69,7 @@ func TestSignVerification(t *testing.T) {
 
 func TestEncryption(t *testing.T) {
 	key := rsa.NewKeys()
-	pr, pu, _ := key.PairKeyGenerator()
+	pr, pu, _ := key.PairKeyGenerator("test@gmail.com")
 	crypto := rsa.New(pr, pu)
 
 	input := "Hello World"
@@ -81,7 +81,7 @@ func TestEncryption(t *testing.T) {
 
 func TestDecryption(t *testing.T) {
 	key := rsa.NewKeys()
-	pr, pu, _ := key.PairKeyGenerator()
+	pr, pu, _ := key.PairKeyGenerator("test@gmail.com")
 	crypto := rsa.New(pr, pu)
 
 	input := "Hello World"

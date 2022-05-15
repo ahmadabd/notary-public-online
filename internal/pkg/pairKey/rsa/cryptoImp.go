@@ -14,10 +14,10 @@ type CryptoImp struct {
 	publicKey  *rsa.PublicKey
 }
 
-func New(privateKey string, publicKey string) pairKey.Crypto {
+func New(privateKey []byte, publicKey []byte) pairKey.Crypto {
 
-	pb, errPr := x509.ParsePKCS1PublicKey([]byte(publicKey))
-	pr, errPu := x509.ParsePKCS1PrivateKey([]byte(privateKey))
+	pb, errPr := x509.ParsePKCS1PublicKey(publicKey)
+	pr, errPu := x509.ParsePKCS1PrivateKey(privateKey)
 
 	if errPr != nil || errPu != nil {
 		panic("Error parsing key")
