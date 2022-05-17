@@ -13,4 +13,6 @@ type Crypto interface {
 //go:generate $HOME/go_projects/bin/mockgen -destination=../../../mocks/mock_keys.go -package=mocks notary-public-online/internal/pkg/pairKey Keys
 type Keys interface {
 	PairKeyGenerator(email string) ([]byte, []byte, error)
+
+	PairKeyReader(filename string) ([]byte, []byte, error)
 }

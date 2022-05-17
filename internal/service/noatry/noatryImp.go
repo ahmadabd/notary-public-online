@@ -37,7 +37,17 @@ func (d *doc) SignNoatry(ctx context.Context, noatryId int, userId int) error {
 		return errors.New("document not found")
 	}
 
-	crypto, err := getUserCrypto(ctx, d, userId)
+	user, err := d.Db.GetUserWithId(ctx, userId)
+
+	if err != nil {
+		return err
+	}
+
+	crypto, err := getUserCrypto(ctx, user.Email)
+	if err != nil {
+		return err
+	}
+
 	if err != nil {
 		return errors.New("error in getting user crypto object")
 	}
@@ -60,7 +70,13 @@ func (d *doc) VerifyNoatrySignature(ctx context.Context, userId int, noatryId in
 
 	documentId := noatry.DocumentId
 
-	crypto, err := getUserCrypto(ctx, d, userId)
+	user, err := d.Db.GetUserWithId(ctx, userId)
+
+	if err != nil {
+		return false, errors.New("user not found")
+	}
+
+	crypto, err := getUserCrypto(ctx, user.Email)
 	if err != nil {
 		return false, errors.New("error in getting user crypto object")
 	}
@@ -90,8 +106,9 @@ func (d *doc) VerifyNoatrySignature(ctx context.Context, userId int, noatryId in
 // 	return "", nil
 // }
 
-func getUserCrypto(ctx context.Context, d *doc, userId int) (pairKey.Crypto, error) {
-	// privateKey, publicKey, err := d.Db.GetUserKeys(ctx, userId)
+func getUserCrypto(ctx context.Context, userEmail string) (pairKey.Crypto, error) {
+	pairKey := rsa.NewKeys()
+	privateKey, publicKey, err := pairKey.PairKeyReader(userEmail)
 
 	if err != nil {
 		return nil, errors.New("user not found")

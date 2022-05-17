@@ -18,6 +18,19 @@ func TestPairKeyGenerate(t *testing.T) {
 	assert.NotNil(t, pu)
 }
 
+func TestPairKeyReader(t *testing.T) {
+	key := rsa.NewKeys()
+	key.PairKeyGenerator("test@gmail.com")
+
+	t.Run("Check_reader", func(t *testing.T) {
+		prReader, puReader, err := key.PairKeyReader("test@gmail.com")
+		assert.Nil(t, err)
+
+		assert.NotNil(t, prReader)
+		assert.NotNil(t, puReader)
+	})
+}
+
 func createNewFile() *os.File {
 	// create new file
 	os.WriteFile("/tmp/test.txt", []byte("test"), 0644)

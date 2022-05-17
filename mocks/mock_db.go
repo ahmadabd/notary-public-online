@@ -199,3 +199,18 @@ func (mr *MockDBMockRecorder) GetUserWithEmail(arg0, arg1 interface{}) *gomock.C
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUserWithEmail", reflect.TypeOf((*MockDB)(nil).GetUserWithEmail), arg0, arg1)
 }
+
+// GetUserWithId mocks base method.
+func (m *MockDB) GetUserWithId(arg0 context.Context, arg1 int) (model.User, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetUserWithId", arg0, arg1)
+	ret0, _ := ret[0].(model.User)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetUserWithId indicates an expected call of GetUserWithId.
+func (mr *MockDBMockRecorder) GetUserWithId(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUserWithId", reflect.TypeOf((*MockDB)(nil).GetUserWithId), arg0, arg1)
+}

@@ -75,6 +75,11 @@ func TestSignNoatry(t *testing.T) {
 	teardownSuite := setupSuite(t)
 	defer teardownSuite(t)
 
+	userModel := model.User{
+		Id:    1,
+		Email: "test@gmail.com",
+	}
+
 	noatryModel := model.Notary{
 		Id:           1,
 		DocumentId:   1,
@@ -89,11 +94,10 @@ func TestSignNoatry(t *testing.T) {
 		SignedDocument: fileHash,
 	}
 
-	// generate pairKey for user
 	key := rsa.NewKeys()
-	pr, pu, _ := key.PairKeyGenerator("test@gmail.com")
+	key.PairKeyGenerator(userModel.Email)
 
-	// mockDB.EXPECT().GetUserKeys(gomock.Any(), 1).Return(pr, pu, nil).Times(1)
+	mockDB.EXPECT().GetUserWithId(gomock.Any(), 1).Return(userModel, nil).Times(1)
 	mockDB.EXPECT().GetDocumentHash(gomock.Any(), 1).Return(&fileHash, nil).Times(1)
 	mockDB.EXPECT().GetNoatry(gomock.Any(), 1).Return(noatryModel, nil).Times(1)
 	mockDB.EXPECT().CreateSignature(gomock.Any(), 1, 1, gomock.Any()).Return(signature, nil).Times(1)
@@ -108,6 +112,11 @@ func TestSignNoatry(t *testing.T) {
 func TestVerifyNoatrySignature(t *testing.T) {
 	teardownSuite := setupSuite(t)
 	defer teardownSuite(t)
+
+	userModel := model.User{
+		Id:    1,
+		Email: "test@gmail.com",
+	}
 
 	noatryModel := model.Notary{
 		Id:           1,
@@ -125,7 +134,7 @@ func TestVerifyNoatrySignature(t *testing.T) {
 	crypto := rsa.New(pr, pu)
 	signedDoc, _ := crypto.Signature(&fileHash)
 
-	// mockDB.EXPECT().GetUserKeys(gomock.Any(), 1).Return(pr, pu, nil).Times(1)
+	mockDB.EXPECT().GetUserWithId(gomock.Any(), 1).Return(userModel, nil).Times(1)
 	mockDB.EXPECT().GetNoatry(gomock.Any(), 1).Return(noatryModel, nil).Times(1)
 	mockDB.EXPECT().GetDocumentHash(gomock.Any(), 1).Return(&fileHash, nil).Times(1)
 	mockDB.EXPECT().GetSignatures(gomock.Any(), 1, 1).Return(&signedDoc, nil).Times(1)

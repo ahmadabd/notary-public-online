@@ -39,3 +39,14 @@ func (db *Gorm) CheckUserExistanceWithEmail(ctx context.Context, email string) (
 
 	return true, nil
 }
+
+func (db *Gorm) GetUserWithId(ctx context.Context, id int) (model.User, error) {
+	
+	var user model.User
+
+	if err := db.Db.WithContext(ctx).Where("id = ?", id).Find(&user).Error; err != nil {
+		return model.User{}, err
+	}
+
+	return user, nil
+}
