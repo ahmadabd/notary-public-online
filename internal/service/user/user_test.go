@@ -2,7 +2,9 @@ package user_test
 
 import (
 	"context"
+	"errors"
 	"log"
+	"notary-public-online/internal/dto"
 	"notary-public-online/internal/entity/model"
 	"notary-public-online/internal/service/user"
 	"notary-public-online/mocks"
@@ -40,32 +42,77 @@ func TestRegister(t *testing.T) {
 	tearDown := setupSuite(t)
 	defer tearDown(t)
 
-	userInp := model.User{
-		FirstName:   "ahmad",
-		LastName:    "abd",
-		Email:       "ahmad@gmail.com",
-		Password:    "123456",
-		Citizenship: "indonesia",
+	inp := dto.RegisterCredential{
+		FirstName:       "ahmad",
+		LastName:        "abd",
+		Email:           "ahmad@gmail.com",
+		Password:        "123456",
+		ConfirmPassword: "123456",
+		Citizenship:     "indonesia",
 	}
 
 	privateKey := "pr key"
 	publicKey := "pu key"
 	passHash := "123456"
 
-	checkUserExistanceMK := mockDB.EXPECT().CheckUserExistanceWithEmail(gomock.Any(), userInp.Email).Return(false, nil).Times(1)
-	passHashMK := mockPassHash.EXPECT().HashPassword(userInp.Password).Return(passHash, nil).After(checkUserExistanceMK).Times(1)
-	pairKeyMK := mockPairKey.EXPECT().PairKeyGenerator(userInp.Email).Return([]byte(privateKey), []byte(publicKey), nil).After(passHashMK).Times(1)
-	mockDB.EXPECT().CreateUser(gomock.Any(), &userInp).Return(func() model.User {
-		userInp.Password = passHash
-		return userInp
+	userModel := model.User{
+		FirstName:   inp.FirstName,
+		LastName:    inp.LastName,
+		Email:       inp.Email,
+		Citizenship: inp.Citizenship,
+	}
+
+	checkUserExistanceMK := mockDB.EXPECT().CheckUserExistanceWithEmail(gomock.Any(), inp.Email).Return(false, nil).Times(1)
+	passHashMK := mockPassHash.EXPECT().HashPassword(inp.Password).Return(passHash, nil).After(checkUserExistanceMK).Times(1)
+	pairKeyMK := mockPairKey.EXPECT().PairKeyGenerator(inp.Email).Return([]byte(privateKey), []byte(publicKey), nil).After(passHashMK).Times(1)
+	mockDB.EXPECT().CreateUser(gomock.Any(), &userModel).Return(func() model.User {
+		userModel.Password = passHash
+		return userModel
 	}(), nil).After(pairKeyMK).Times(1)
 
 	userSrv := user.New(mockDB, mockPairKey, mockPassHash)
+	err := userSrv.Register(context.TODO(), inp)
+	assert.Equal(t, nil, err)
+}
 
-	user, err := userSrv.Register(context.TODO(), userInp)
+func TestRegisterWhenEmailExists(t *testing.T) {
+	tearDown := setupSuite(t)
+	defer tearDown(t)
 
-	assert.Equal(t, user, userInp)
-	assert.Nil(t, err)
+	inp := dto.RegisterCredential{
+		FirstName:       "ahmad",
+		LastName:        "abd",
+		Email:           "ahmad@gmail.com",
+		Password:        "123456",
+		ConfirmPassword: "123456",
+		Citizenship:     "indonesia",
+	}
+
+	mockDB.EXPECT().CheckUserExistanceWithEmail(gomock.Any(), inp.Email).Return(true, nil).Times(1)
+
+	userSrv := user.New(mockDB, mockPairKey, mockPassHash)
+	err := userSrv.Register(context.TODO(), inp)
+	assert.Equal(t, errors.New("user with this email exist in system"), err)
+}
+
+func TestRegisterWithNotSamePassword(t *testing.T) {
+	tearDown := setupSuite(t)
+	defer tearDown(t)
+
+	inp := dto.RegisterCredential{
+		FirstName:       "ahmad",
+		LastName:        "abd",
+		Email:           "ahmad@gmail.com",
+		Password:        "123456",
+		ConfirmPassword: "2",
+		Citizenship:     "indonesia",
+	}
+
+	mockDB.EXPECT().CheckUserExistanceWithEmail(gomock.Any(), inp.Email).Return(false, nil).Times(1)
+
+	userSrv := user.New(mockDB, mockPairKey, mockPassHash)
+	err := userSrv.Register(context.TODO(), inp)
+	assert.Equal(t, errors.New("password and confirm password does not match"), err)
 }
 
 func TestLogin(t *testing.T) {
@@ -86,5 +133,5 @@ func TestLogin(t *testing.T) {
 	mockPassHash.EXPECT().CheckPasswordHash(pass, userInp.Password).Return(true).After(getUserMK).Times(1)
 
 	userSrv := user.New(mockDB, mockPairKey, mockPassHash)
-	userSrv.Login(context.TODO(), userInp.Email, pass)
+	userSrv.Login(context.TODO(), dto.LoginCredential{Email: userInp.Email, Password: pass})
 }

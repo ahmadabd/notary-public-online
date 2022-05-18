@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"log"
+	"notary-public-online/internal/dto"
 	"notary-public-online/internal/entity/model"
 	"notary-public-online/internal/pkg/pairKey"
 	"notary-public-online/internal/pkg/passwordHash"
@@ -20,44 +21,55 @@ func New(db repository.DB, keys pairKey.Keys, passHash passwordHash.PasswordHash
 	return &userImp{Db: db, Key: keys, PassHash: passHash}
 }
 
-func (u *userImp) Register(ctx context.Context, user model.User) (model.User, error) {
+func (u *userImp) Register(ctx context.Context, inp dto.RegisterCredential) error {
 
 	// check user with this email dosent exist
-	email := user.Email
+	email := inp.Email
 	if exists, err := u.Db.CheckUserExistanceWithEmail(ctx, email); err != nil {
-		log.Panicln("CheckUserExistanceWithEmail failed in registering user: ", err)
-		return model.User{}, err
+		return err
 	} else if exists {
-		return model.User{}, errors.New("user with this email exist in system")
+		return errors.New("user with this email exist in system")
+	}
+
+	// check password and confirm password match
+	if inp.Password != inp.ConfirmPassword {
+		return errors.New("password and confirm password does not match")
+	}
+
+	user := model.User{
+		Email:       inp.Email,
+		FirstName:   inp.FirstName,
+		LastName:    inp.LastName,
+		Citizenship: inp.Citizenship,
 	}
 
 	// decrypet password
-	password, _ := u.PassHash.HashPassword(user.Password)
+	password, _ := u.PassHash.HashPassword(inp.Password)
 	user.Password = password
 
 	_, _, err := u.Key.PairKeyGenerator(email)
 
 	if err != nil {
-		log.Panicln("Generating pairKey failed")
-		return model.User{}, err
+		log.Println("Generating pairKey failed")
+		return err
 	}
 
-	user, err = u.Db.CreateUser(ctx, &user)
+	_, err = u.Db.CreateUser(ctx, &user)
 
 	if err != nil {
-		return model.User{}, err
+		return err
 	}
 
-	return user, nil
+	return nil
 }
 
-func (u *userImp) Login(ctx context.Context, email string, password string) (bool, error) {
-	user, err := u.Db.GetUserWithEmail(ctx, email)
+func (u *userImp) Login(ctx context.Context, inp dto.LoginCredential) (bool, error) {
+	user, err := u.Db.GetUserWithEmail(ctx, inp.Email)
 	if err != nil {
 		return false, err
 	}
 
-	if !u.PassHash.CheckPasswordHash(password, user.Password) {
+	if !u.PassHash.CheckPasswordHash(inp.Password, user.Password) {
 		return false, errors.New("invalid password")
 	}
 

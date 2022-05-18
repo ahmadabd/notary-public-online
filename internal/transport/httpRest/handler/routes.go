@@ -11,7 +11,7 @@ func (r *rest) routes(baseRoute string) {
 	user := r.gin.Group(fmt.Sprintf("/%s/user", baseRoute))
 	{
 		user.POST("/register", func(ctx *gin.Context) {
-			user, err := r.handler.Register(ctx)
+			err := r.handler.RegisterController(ctx)
 
 			if err != nil {
 				ctx.JSON(http.StatusInternalServerError, gin.H{
@@ -20,7 +20,19 @@ func (r *rest) routes(baseRoute string) {
 			} else {
 				ctx.JSON(http.StatusOK, gin.H{
 					"message": "success",
-					"user":    user,
+				})
+			}
+		})
+
+		user.POST("/login", func(ctx *gin.Context) {
+			token := r.handler.LoginController(ctx)
+			if token != "" {
+				ctx.JSON(http.StatusOK, gin.H{
+					"token": token,
+				})
+			} else {
+				ctx.JSON(http.StatusUnauthorized, gin.H{
+					"error": "unauthorized",
 				})
 			}
 		})
