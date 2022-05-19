@@ -6,6 +6,7 @@ import (
 	"log"
 	"math/rand"
 	"notary-public-online/internal/configs/yaml"
+	"notary-public-online/internal/pkg/jwtPkg"
 	"notary-public-online/internal/pkg/pairKey/rsa"
 	"notary-public-online/internal/pkg/passwordHash/passbcrypt"
 	"notary-public-online/internal/repository/gorm"
@@ -49,12 +50,14 @@ func serve(c *cli.Context) error {
 		log.Println("error while connecting to database: ", err)
 	}
 
+	jwtPkg := jwtPkg.JWTAuthService()
+
 	// documentService := document.New(db, disk.New())
 	// noatryService := noatry.New(db)
 	userService := user.New(db, rsa.NewKeys(), passbcrypt.New())
 
 	go func() {
-		if err := handler.New(userService).Start(cfg); err != nil {
+		if err := handler.New(userService, jwtPkg).Start(cfg); err != nil {
 			log.Println(err)
 		}
 	}()

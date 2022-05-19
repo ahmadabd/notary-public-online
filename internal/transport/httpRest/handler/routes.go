@@ -37,4 +37,9 @@ func (r *rest) routes(baseRoute string) {
 			}
 		})
 	}
+
+	// api := r.gin.Group(fmt.Sprint("/%s/api", baseRoute), middlewares.AuthorizeJWT())
+	// {
+
+	// }
 }

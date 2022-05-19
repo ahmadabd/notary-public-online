@@ -3,6 +3,7 @@ package handler
 import (
 	"fmt"
 	"notary-public-online/internal/configs/yaml"
+	"notary-public-online/internal/pkg/jwtPkg"
 	"notary-public-online/internal/service/user"
 	"notary-public-online/internal/transport/httpRest"
 
@@ -14,18 +15,19 @@ type rest struct {
 	handler *handler
 }
 
-func New(userServ user.User) httpRest.Rest {
+func New(userServ user.User, jwtPkg jwtPkg.Jwt) httpRest.Rest {
 	return &rest{
 		gin: gin.Default(),
 		handler: &handler{
 			userServ: userServ,
+			jwtPkg:   jwtPkg,
 		},
 	}
 }
 
 func (r *rest) Start(cfg *yaml.Config) error {
 
-	r.routes("api")
+	r.routes("v1")
 
 	return r.gin.Run(serverConfig(cfg))
 }

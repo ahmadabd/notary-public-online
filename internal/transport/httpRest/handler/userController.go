@@ -30,5 +30,5 @@ func (h *handler) LoginController(ctx *gin.Context) string {
 		return ""
 	}
 
-	return "TOEKN"	
+	return h.jwtPkg.GenerateToken(user.Email, false)
 }
