@@ -17,11 +17,13 @@ func AuthorizeJWT() gin.HandlerFunc {
 		token, err := jwtPkg.JWTAuthService().ValidateToken(tokenString)
 		if token.Valid {
 			claims := token.Claims.(jwt.MapClaims)
-			log.Println(claims)
+			
+			c.Set("user", claims["name"])
+
+			log.Println(claims["name"])
 		} else {
 			log.Println(err)
 			c.AbortWithStatus(http.StatusUnauthorized)
 		}
-
 	}
 }

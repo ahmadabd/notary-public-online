@@ -45,17 +45,23 @@ func TestStoreDocument(t *testing.T) {
 	// file and file address
 	file, _ := os.Open("../../../mocks/fakeFile.txt")
 
+	user := model.User{
+		Id:    1,
+		Email: "test@gmail.com",
+	}
+
 	document := model.Document{
 		Name:        "doc name",
 		Description: "doc description",
 		FileAddress: "fakeFile.txt",
-		UserId:      1,
+		UserId:      user.Id,
 	}
 
 	mockDB.EXPECT().CreateDocument(gomock.Any(), document.Name, document.Description, document.FileAddress, gomock.Any(), document.UserId, false).Return(document, nil).Times(1)
+	mockDB.EXPECT().GetUserWithEmail(gomock.Any(), user.Email).Return(user, nil).Times(1)
 	mockStorage.EXPECT().StoreFile(file).Return("fakeFile.txt", nil).Times(1)
 
-	_, err := doc.StoreDocument(context.TODO(), file, "doc name", "doc description", 1)
+	_, err := doc.StoreDocument(context.TODO(), file, "doc name", "doc description", user.Email)
 
 	assert.Nil(t, err)
 }
@@ -71,16 +77,22 @@ func TestStoreDocumentIntegration(t *testing.T) {
 	// file and file address
 	file, _ := os.Open("../../../mocks/fakeFile.txt")
 
+	user := model.User{
+		Id:    1,
+		Email: "test@gmail.com",
+	}
+
 	document := model.Document{
 		Name:        "doc name",
 		Description: "doc description",
 		FileAddress: "fakeFile.txt",
-		UserId:      1,
+		UserId:      user.Id,
 	}
 
 	mockDB.EXPECT().CreateDocument(gomock.Any(), document.Name, document.Description, gomock.Any(), gomock.Any(), 1, false).Return(document, nil).Times(1)
+	mockDB.EXPECT().GetUserWithEmail(gomock.Any(), user.Email).Return(user, nil).Times(1)
 
-	_, err := doc.StoreDocument(context.TODO(), file, "doc name", "doc description", 1)
+	_, err := doc.StoreDocument(context.TODO(), file, "doc name", "doc description", user.Email)
 
 	assert.Nil(t, err)
 }
@@ -107,16 +119,22 @@ func TestReadDocument(t *testing.T) {
 	// store new Document
 	file, _ := os.Open("../../../mocks/fakeFile.txt")
 
+	user := model.User{
+		Id:    1,
+		Email: "test@gmail.com",
+	}
+
 	document := model.Document{
 		Name:        "doc name",
 		Description: "doc description",
 		FileAddress: "fakeFile.txt",
-		UserId:      1,
+		UserId:      user.Id,
 	}
 
 	mockDB.EXPECT().CreateDocument(gomock.Any(), document.Name, document.Description, document.FileAddress, gomock.Any(), document.UserId, false).Return(document, nil).Times(1)
+	mockDB.EXPECT().GetUserWithEmail(gomock.Any(), user.Email).Return(user, nil).Times(1)
 	mockStorage.EXPECT().StoreFile(file).Return("fakeFile.txt", nil).Times(1)
-	doc.StoreDocument(context.TODO(), file, "doc name", "doc description", 1)
+	doc.StoreDocument(context.TODO(), file, "doc name", "doc description", user.Email)
 
 	// Read Document
 	mockDB.EXPECT().GetDocumentAddress(gomock.Any(), 1).Return("fakeFile.txt", nil).Times(1)

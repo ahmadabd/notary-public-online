@@ -3,6 +3,7 @@ package handler
 import (
 	"fmt"
 	"net/http"
+	"notary-public-online/internal/transport/middlewares"
 
 	"github.com/gin-gonic/gin"
 )
@@ -38,8 +39,18 @@ func (r *rest) routes(baseRoute string) {
 		})
 	}
 
-	// api := r.gin.Group(fmt.Sprint("/%s/api", baseRoute), middlewares.AuthorizeJWT())
-	// {
-
-	// }
+	api := r.gin.Group(fmt.Sprintf("/%s/api", baseRoute), middlewares.AuthorizeJWT())
+	{
+		api.POST("/document", func(ctx *gin.Context) {
+			if err := r.handler.StoreDocument(ctx); err != nil {
+				ctx.JSON(http.StatusInternalServerError, gin.H{
+					"error": err.Error(),
+				})
+			} else {
+				ctx.JSON(http.StatusOK, gin.H{
+					"message": "success",
+				})
+			}
+		})
+	}
 }
