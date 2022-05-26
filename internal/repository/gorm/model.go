@@ -10,10 +10,10 @@ type User struct {
 	FirstName   string    `json:"firstName" binding:"required" gorm:"type:varchar(32)"`
 	LastName    string    `json:"lastName" binding:"required" gorm:"type:varchar(32)"`
 	Email       string    `json:"email" binding:"required,email" gorm:"type:varchar(32)"`
-	Password    string    `json:"password" binding:"required" gorm:"type:varchar(32)"`
+	Password    string    `json:"password" binding:"required" gorm:"type:varchar(255)"`
 	Citizenship string    `json:"citizenship" binding:"required" gorm:"type:varchar(32)"`
-	CreatedAt   time.Time `json:"created_at" gorm:"default:CURRENT_TIMESTAMP"`
-	UpdatedAt   time.Time `json:"updated_at" gorm:"default:CURRENT_TIMESTAMP"`
+	CreatedAt   time.Time `json:"created_at"`
+	UpdatedAt   time.Time `json:"updated_at"`
 }
 
 func mapFromUserEntity(user model.User) User {
@@ -51,8 +51,8 @@ type Document struct {
 	UserId      int       `json:"-"`
 	Hash        []byte    `json:"hash" gorm:"type:varchar(255);UNIQUE"`
 	Active      bool      `json:"active" gorm:"type:bool;default:false"`
-	CreatedAt   time.Time `json:"created_at" gorm:"default:CURRENT_TIMESTAMP"`
-	UpdatedAt   time.Time `json:"updated_at" gorm:"default:CURRENT_TIMESTAMP"`
+	CreatedAt   time.Time `json:"created_at"`
+	UpdatedAt   time.Time `json:"updated_at"`
 }
 
 func mapFromDocumentEntity(document model.Document) Document {
@@ -92,8 +92,8 @@ type Notary struct {
 	DocumentId   int       `json:"-"`
 	PartnerCount int       `json:"partnerCount" binding:"required" gorm:"type:int"`
 	Completed    bool      `json:"completed" gorm:"type:bool;default:false"`
-	CreatedAt    time.Time `json:"created_at" gorm:"default:CURRENT_TIMESTAMP"`
-	UpdatedAt    time.Time `json:"updated_at" gorm:"default:CURRENT_TIMESTAMP"`
+	CreatedAt    time.Time `json:"created_at"`
+	UpdatedAt    time.Time `json:"updated_at"`
 }
 
 func mapFromNotaryEntity(notary model.Notary) Notary {
@@ -127,10 +127,10 @@ type Signature struct {
 	User           User      `json:"user" gorm:"foreignKey:UserId"`
 	UserId         int       `json:"-"`
 	SignedDocument []byte    `json:"signedDocument" gorm:"type:varchar(255)"`
-	Notary         Notary    `json:"notary" gorm:"foreignKey:NoatryId"`
+	Notary         Notary    `json:"notary" gorm:"foreignKey:NotaryId"`
 	NotaryId       int       `json:"-"`
-	CreatedAt      time.Time `json:"created_at" gorm:"default:CURRENT_TIMESTAMP"`
-	UpdatedAt      time.Time `json:"updated_at" gorm:"default:CURRENT_TIMESTAMP"`
+	CreatedAt      time.Time `json:"created_at"`
+	UpdatedAt      time.Time `json:"updated_at"`
 }
 
 func mapFromSignatureEntity(signature model.Signature) Signature {

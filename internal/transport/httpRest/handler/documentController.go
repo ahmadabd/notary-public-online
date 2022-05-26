@@ -26,5 +26,6 @@ func (h *handler) StoreDocument(ctx *gin.Context) error {
 
 		h.docServ.StoreDocument(cctx, document.Document, document.Name, document.Description, fmt.Sprintf("%v", userEmail))
 	}
+	
 	return nil
 }

@@ -14,9 +14,11 @@ type Gorm struct {
 }
 
 func SetupDatabase(cfg *yaml.Config) (repository.DB, error) {
-	db, err := gorm.Open(mysql.Open(databaseConfig(cfg)), &gorm.Config{})
+	db, err := gorm.Open(mysql.Open(databaseConfig(cfg)), &gorm.Config{
+		DisableForeignKeyConstraintWhenMigrating: true,
+	})
 
-	// db.AutoMigrate(User{}, Document{}, Notary{}, Signature{})
+	db.AutoMigrate(User{}, Document{}, Notary{}, Signature{})
 
 	if err != nil {
 		return nil, err

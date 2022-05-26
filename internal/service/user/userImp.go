@@ -43,9 +43,7 @@ func (u *userImp) Register(ctx context.Context, inp dto.RegisterCredential) erro
 		Citizenship: inp.Citizenship,
 	}
 
-	// decrypet password
-	password, _ := u.PassHash.HashPassword(inp.Password)
-	user.Password = password
+	user.Password = decrypetPassword(u, inp.Password)
 
 	_, _, err := u.Key.PairKeyGenerator(email)
 
@@ -61,6 +59,12 @@ func (u *userImp) Register(ctx context.Context, inp dto.RegisterCredential) erro
 	}
 
 	return nil
+}
+
+func decrypetPassword(u *userImp, inpPass string) string {
+	password, _ := u.PassHash.HashPassword(inpPass)
+
+	return password
 }
 
 func (u *userImp) Login(ctx context.Context, inp dto.LoginCredential) (bool, error) {
