@@ -35,6 +35,20 @@ func (m *MockDB) EXPECT() *MockDBMockRecorder {
 	return m.recorder
 }
 
+// CheckDocumentIdempotency mocks base method.
+func (m *MockDB) CheckDocumentIdempotency(arg0 context.Context, arg1 string) bool {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CheckDocumentIdempotency", arg0, arg1)
+	ret0, _ := ret[0].(bool)
+	return ret0
+}
+
+// CheckDocumentIdempotency indicates an expected call of CheckDocumentIdempotency.
+func (mr *MockDBMockRecorder) CheckDocumentIdempotency(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CheckDocumentIdempotency", reflect.TypeOf((*MockDB)(nil).CheckDocumentIdempotency), arg0, arg1)
+}
+
 // CheckUserExistanceWithEmail mocks base method.
 func (m *MockDB) CheckUserExistanceWithEmail(arg0 context.Context, arg1 string) (bool, error) {
 	m.ctrl.T.Helper()
@@ -51,17 +65,17 @@ func (mr *MockDBMockRecorder) CheckUserExistanceWithEmail(arg0, arg1 interface{}
 }
 
 // CreateDocument mocks base method.
-func (m *MockDB) CreateDocument(arg0 context.Context, arg1, arg2, arg3 string, arg4 *[]byte, arg5 int, arg6 bool) error {
+func (m *MockDB) CreateDocument(arg0 context.Context, arg1, arg2, arg3, arg4 string, arg5 *[]byte, arg6 int, arg7 bool) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateDocument", arg0, arg1, arg2, arg3, arg4, arg5, arg6)
+	ret := m.ctrl.Call(m, "CreateDocument", arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // CreateDocument indicates an expected call of CreateDocument.
-func (mr *MockDBMockRecorder) CreateDocument(arg0, arg1, arg2, arg3, arg4, arg5, arg6 interface{}) *gomock.Call {
+func (mr *MockDBMockRecorder) CreateDocument(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateDocument", reflect.TypeOf((*MockDB)(nil).CreateDocument), arg0, arg1, arg2, arg3, arg4, arg5, arg6)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateDocument", reflect.TypeOf((*MockDB)(nil).CreateDocument), arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7)
 }
 
 // CreateNoatry mocks base method.

@@ -3,10 +3,13 @@ package gorm
 import (
 	"context"
 	"notary-public-online/internal/entity/model"
+
+	"gorm.io/gorm"
 )
 
-func (db *Gorm) CreateDocument(ctx context.Context, name string, description string, fileAddress string, documentsHash *[]byte, userId int, active bool) error {
+func (db *Gorm) CreateDocument(ctx context.Context, idempotentKey string, name string, description string, fileAddress string, documentsHash *[]byte, userId int, active bool) error {
 	document := mapFromDocumentEntity(model.Document{
+		Idempotent:  idempotentKey,
 		Name:        name,
 		Description: description,
 		FileAddress: fileAddress,
@@ -50,4 +53,16 @@ func (db *Gorm) GetDocumentHash(ctx context.Context, documentId int) ([]byte, er
 	}
 
 	return document.Hash, nil
+}
+
+func (db *Gorm) CheckDocumentIdempotency(ctx context.Context, idempotentKey string) bool {
+	if err := db.Db.WithContext(ctx).Where("idempotent", idempotentKey).First(&Document{}).Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return false
+		}
+
+		return false
+	}
+
+	return true
 }

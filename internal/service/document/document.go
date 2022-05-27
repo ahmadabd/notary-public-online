@@ -7,7 +7,7 @@ import (
 )
 
 type Document interface {
-	StoreDocument(ctx context.Context, document *os.File, name string, description string, userEmail string) error
+	StoreDocument(ctx context.Context, idempotentKey string, document *os.File, name string, description string, userEmail string) error
 
 	DocumentDetails(ctx context.Context, documentId int) (model.Document, error)
 

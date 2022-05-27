@@ -17,6 +17,12 @@ func (h *handler) StoreDocument(ctx *gin.Context) error {
 	cctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
+	// check idempotency
+	idempotentKey := ctx.GetHeader("idempotent")
+	if idempotentKey == "" {
+		return fmt.Errorf("missing idempotency key")
+	}
+
 	userEmail, exists := ctx.Get("user")
 
 	if exists {
@@ -33,7 +39,7 @@ func (h *handler) StoreDocument(ctx *gin.Context) error {
 		document.Name = ctx.PostForm("name")
 		document.Description = ctx.PostForm("description")
 
-		err = h.docServ.StoreDocument(cctx, document.Document, document.Name, document.Description, fmt.Sprintf("%v", userEmail))
+		err = h.docServ.StoreDocument(cctx, idempotentKey, document.Document, document.Name, document.Description, fmt.Sprintf("%v", userEmail))
 
 		if err != nil {
 			return err

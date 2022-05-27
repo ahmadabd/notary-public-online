@@ -6,13 +6,15 @@ import (
 )
 
 type document interface {
-	CreateDocument(ctx context.Context, name string, description string, fileAddress string, documentsHash *[]byte, userId int, active bool) error
+	CreateDocument(ctx context.Context, idempotentKey string, name string, description string, fileAddress string, documentsHash *[]byte, userId int, active bool) error
 
 	GetDocument(ctx context.Context, documentId int) (model.Document, error)
 
 	GetDocumentAddress(ctx context.Context, documentId int) (string, error)
 
 	GetDocumentHash(ctx context.Context, documentId int) ([]byte, error)
+
+	CheckDocumentIdempotency(ctx context.Context, idempotentKey string) bool
 }
 
 type notary interface {

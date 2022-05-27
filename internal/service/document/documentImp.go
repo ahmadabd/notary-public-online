@@ -2,6 +2,7 @@ package document
 
 import (
 	"context"
+	"log"
 	"notary-public-online/internal/entity/model"
 	"notary-public-online/internal/pkg/hash/sha256"
 	"notary-public-online/internal/pkg/storage"
@@ -18,12 +19,18 @@ func New(db repository.DB, storage storage.Storage) Document {
 	return &documentImp{Db: db, Storage: storage}
 }
 
-func (d *documentImp) StoreDocument(ctx context.Context, document *os.File, name string, description string, userEmail string) error {
+func (d *documentImp) StoreDocument(ctx context.Context, idempotentKey string, document *os.File, name string, description string, userEmail string) error {
 
 	// get user id
 	user, err := d.Db.GetUserWithEmail(ctx, userEmail)
 	if err != nil {
 		return err
+	}
+
+	// check idempotency
+	if d.Db.CheckDocumentIdempotency(ctx, idempotentKey) {
+		log.Println("Item with this idempotent key already exists")
+		return nil
 	}
 
 	// get document hash
@@ -39,7 +46,7 @@ func (d *documentImp) StoreDocument(ctx context.Context, document *os.File, name
 		return err
 	}
 
-	return d.Db.CreateDocument(ctx, name, description, fileAddress, &documentsHash, user.Id, false)
+	return d.Db.CreateDocument(ctx, idempotentKey, name, description, fileAddress, &documentsHash, user.Id, false)
 }
 
 func (d *documentImp) DocumentDetails(ctx context.Context, documentId int) (model.Document, error) {

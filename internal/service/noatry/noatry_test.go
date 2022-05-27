@@ -98,7 +98,7 @@ func TestSignNoatry(t *testing.T) {
 	key.PairKeyGenerator(userModel.Email)
 
 	mockDB.EXPECT().GetUserWithId(gomock.Any(), 1).Return(userModel, nil).Times(1)
-	mockDB.EXPECT().GetDocumentHash(gomock.Any(), 1).Return(&fileHash, nil).Times(1)
+	mockDB.EXPECT().GetDocumentHash(gomock.Any(), 1).Return(fileHash, nil).Times(1)
 	mockDB.EXPECT().GetNoatry(gomock.Any(), 1).Return(noatryModel, nil).Times(1)
 	mockDB.EXPECT().CreateSignature(gomock.Any(), 1, 1, gomock.Any()).Return(signature, nil).Times(1)
 
@@ -136,7 +136,7 @@ func TestVerifyNoatrySignature(t *testing.T) {
 
 	mockDB.EXPECT().GetUserWithId(gomock.Any(), 1).Return(userModel, nil).Times(1)
 	mockDB.EXPECT().GetNoatry(gomock.Any(), 1).Return(noatryModel, nil).Times(1)
-	mockDB.EXPECT().GetDocumentHash(gomock.Any(), 1).Return(&fileHash, nil).Times(1)
+	mockDB.EXPECT().GetDocumentHash(gomock.Any(), 1).Return(fileHash, nil).Times(1)
 	mockDB.EXPECT().GetSignatures(gomock.Any(), 1, 1).Return(&signedDoc, nil).Times(1)
 
 	noatry := noatry.New(mockDB)

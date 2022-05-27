@@ -44,6 +44,7 @@ func MapToUserEntity(user User) model.User {
 
 type Document struct {
 	Id          int       `json:"id" gorm:"primary_key;auto_increment"`
+	Idempotent  string    `json:"idempotent" gorm:"type:varchar(255);UNIQUE_INDEX;NOT NULL"`
 	Name        string    `json:"name" binding:"required" gorm:"type:varchar(32)"`
 	Description string    `json:"description" binding:"required" gorm:"type:varchar(255)"`
 	FileAddress string    `json:"fileAddress" gorm:"type:varchar(255)"`
@@ -58,6 +59,7 @@ type Document struct {
 func mapFromDocumentEntity(document model.Document) Document {
 	return Document{
 		Id:          document.Id,
+		Idempotent:  document.Idempotent,
 		Name:        document.Name,
 		Description: document.Description,
 		FileAddress: document.FileAddress,
@@ -73,6 +75,7 @@ func mapFromDocumentEntity(document model.Document) Document {
 func mapToDocumentEntity(document Document) model.Document {
 	return model.Document{
 		Id:          document.Id,
+		Idempotent:  document.Idempotent,
 		Name:        document.Name,
 		Description: document.Description,
 		FileAddress: document.FileAddress,

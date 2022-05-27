@@ -4,6 +4,7 @@ import "time"
 
 type Document struct {
 	Id          int       `json:"id"`
+	Idempotent  string    `json:"idempotent"`
 	Name        string    `json:"name"`
 	Description string    `json:"description"`
 	FileAddress string    `json:"fileAddress"`
