@@ -18,25 +18,25 @@ func New(db repository.DB, storage storage.Storage) Document {
 	return &documentImp{Db: db, Storage: storage}
 }
 
-func (d *documentImp) StoreDocument(ctx context.Context, document *os.File, name string, description string, userEmail string) (model.Document, error) {
+func (d *documentImp) StoreDocument(ctx context.Context, document *os.File, name string, description string, userEmail string) error {
 
 	// get user id
 	user, err := d.Db.GetUserWithEmail(ctx, userEmail)
 	if err != nil {
-		return model.Document{}, err
+		return err
 	}
 
 	// get document hash
 	hasher := sha256.New()
 	documentsHash, err := hasher.Hash(document)
 	if err != nil {
-		return model.Document{}, err
+		return err
 	}
 
 	// store document in storage
 	fileAddress, err := d.Storage.StoreFile(document)
 	if err != nil {
-		return model.Document{}, err
+		return err
 	}
 
 	return d.Db.CreateDocument(ctx, name, description, fileAddress, &documentsHash, user.Id, false)

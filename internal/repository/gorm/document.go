@@ -5,7 +5,7 @@ import (
 	"notary-public-online/internal/entity/model"
 )
 
-func (db *Gorm) CreateDocument(ctx context.Context, name string, description string, fileAddress string, documentsHash *[]byte, userId int, active bool) (model.Document, error) {
+func (db *Gorm) CreateDocument(ctx context.Context, name string, description string, fileAddress string, documentsHash *[]byte, userId int, active bool) error {
 	document := mapFromDocumentEntity(model.Document{
 		Name:        name,
 		Description: description,
@@ -16,10 +16,10 @@ func (db *Gorm) CreateDocument(ctx context.Context, name string, description str
 	})
 
 	if err := db.Db.WithContext(ctx).Create(&document).Error; err != nil {
-		return model.Document{}, err
+		return err
 	}
 
-	return mapToDocumentEntity(document), nil
+	return nil
 }
 
 func (db *Gorm) GetDocument(ctx context.Context, documentId int) (model.Document, error) {
@@ -42,12 +42,12 @@ func (db *Gorm) GetDocumentAddress(ctx context.Context, documentId int) (string,
 	return document.FileAddress, nil
 }
 
-func (db *Gorm) GetDocumentHash(ctx context.Context, documentId int) (*[]byte, error) {
+func (db *Gorm) GetDocumentHash(ctx context.Context, documentId int) ([]byte, error) {
 	var document Document
 
 	if err := db.Db.WithContext(ctx).Select("Hash").Where("id", documentId).First(&document).Error; err != nil {
 		return nil, err
 	}
 
-	return &document.Hash, nil
+	return document.Hash, nil
 }

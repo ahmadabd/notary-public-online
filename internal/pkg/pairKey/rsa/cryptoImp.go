@@ -26,15 +26,15 @@ func New(privateKey []byte, publicKey []byte) pairKey.Crypto {
 	return &CryptoImp{privateKey: pr, publicKey: pb}
 }
 
-func (c *CryptoImp) Signature(hashedInput *[]byte) ([]byte, error) {
+func (c *CryptoImp) Signature(hashedInput []byte) ([]byte, error) {
 
-	signature, err := rsa.SignPSS(rand.Reader, c.privateKey, crypto.SHA256, *hashedInput, nil)
+	signature, err := rsa.SignPSS(rand.Reader, c.privateKey, crypto.SHA256, hashedInput, nil)
 
 	return signature, err
 }
 
-func (c *CryptoImp) VerifySignature(signature *[]byte, hashedInput *[]byte) bool {
-	if err := rsa.VerifyPSS(c.publicKey, crypto.SHA256, *signature, *hashedInput, nil); err != nil {
+func (c *CryptoImp) VerifySignature(signature *[]byte, hashedInput []byte) bool {
+	if err := rsa.VerifyPSS(c.publicKey, crypto.SHA256, *signature, hashedInput, nil); err != nil {
 		return true
 	}
 

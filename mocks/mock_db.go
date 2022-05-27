@@ -51,12 +51,11 @@ func (mr *MockDBMockRecorder) CheckUserExistanceWithEmail(arg0, arg1 interface{}
 }
 
 // CreateDocument mocks base method.
-func (m *MockDB) CreateDocument(arg0 context.Context, arg1, arg2, arg3 string, arg4 *[]byte, arg5 int, arg6 bool) (model.Document, error) {
+func (m *MockDB) CreateDocument(arg0 context.Context, arg1, arg2, arg3 string, arg4 *[]byte, arg5 int, arg6 bool) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateDocument", arg0, arg1, arg2, arg3, arg4, arg5, arg6)
-	ret0, _ := ret[0].(model.Document)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	ret0, _ := ret[0].(error)
+	return ret0
 }
 
 // CreateDocument indicates an expected call of CreateDocument.
@@ -141,10 +140,10 @@ func (mr *MockDBMockRecorder) GetDocumentAddress(arg0, arg1 interface{}) *gomock
 }
 
 // GetDocumentHash mocks base method.
-func (m *MockDB) GetDocumentHash(arg0 context.Context, arg1 int) (*[]byte, error) {
+func (m *MockDB) GetDocumentHash(arg0 context.Context, arg1 int) ([]byte, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetDocumentHash", arg0, arg1)
-	ret0, _ := ret[0].(*[]byte)
+	ret0, _ := ret[0].([]byte)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

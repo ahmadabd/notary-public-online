@@ -54,7 +54,7 @@ func TestSign(t *testing.T) {
 	hashedInput, _ := hash.Hash(input)
 
 	t.Run("Check_signuture", func(t *testing.T) {
-		signature, err := crypto.Signature(&hashedInput)
+		signature, err := crypto.Signature(hashedInput)
 		assert.Nil(t, err)
 		assert.NotNil(t, signature)
 	})
@@ -71,11 +71,11 @@ func TestSignVerification(t *testing.T) {
 	hashedInput, _ := hash.Hash(input)
 
 	t.Run("Check_verification", func(t *testing.T) {
-		signature, err := crypto.Signature(&hashedInput)
+		signature, err := crypto.Signature(hashedInput)
 		assert.Nil(t, err)
 		assert.NotNil(t, signature)
 
-		res := crypto.VerifySignature(&signature, &hashedInput)
+		res := crypto.VerifySignature(&signature, hashedInput)
 		assert.True(t, res)
 	})
 }

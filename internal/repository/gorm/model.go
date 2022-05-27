@@ -49,7 +49,7 @@ type Document struct {
 	FileAddress string    `json:"fileAddress" gorm:"type:varchar(255)"`
 	User        User      `json:"user" gorm:"foreignkey:UserId"`
 	UserId      int       `json:"-"`
-	Hash        []byte    `json:"hash" gorm:"type:varchar(255);UNIQUE"`
+	Hash        []byte    `json:"hash" gorm:"type:binary(32)"`
 	Active      bool      `json:"active" gorm:"type:bool;default:false"`
 	CreatedAt   time.Time `json:"created_at"`
 	UpdatedAt   time.Time `json:"updated_at"`

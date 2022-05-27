@@ -52,7 +52,7 @@ func (d *doc) SignNoatry(ctx context.Context, noatryId int, userId int) error {
 		return errors.New("error in getting user crypto object")
 	}
 
-	if signedDoc, err := crypto.Signature(documentHash); err == nil {
+	if signedDoc, err := crypto.Signature([]byte(documentHash)); err == nil {
 		if _, err := d.Db.CreateSignature(ctx, noatryId, userId, &signedDoc); err == nil {
 			return err
 		}
@@ -93,7 +93,7 @@ func (d *doc) VerifyNoatrySignature(ctx context.Context, userId int, noatryId in
 	}
 
 	// verify := crypto.VerifySignature(documentHash, documentSignature)
-	verify := crypto.VerifySignature(documentSignature, documentHash)
+	verify := crypto.VerifySignature(documentSignature, []byte(documentHash))
 
 	return verify, nil
 }

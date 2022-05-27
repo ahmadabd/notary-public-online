@@ -61,7 +61,7 @@ func TestStoreDocument(t *testing.T) {
 	mockDB.EXPECT().GetUserWithEmail(gomock.Any(), user.Email).Return(user, nil).Times(1)
 	mockStorage.EXPECT().StoreFile(file).Return("fakeFile.txt", nil).Times(1)
 
-	_, err := doc.StoreDocument(context.TODO(), file, "doc name", "doc description", user.Email)
+	err := doc.StoreDocument(context.TODO(), file, "doc name", "doc description", user.Email)
 
 	assert.Nil(t, err)
 }
@@ -92,7 +92,7 @@ func TestStoreDocumentIntegration(t *testing.T) {
 	mockDB.EXPECT().CreateDocument(gomock.Any(), document.Name, document.Description, gomock.Any(), gomock.Any(), 1, false).Return(document, nil).Times(1)
 	mockDB.EXPECT().GetUserWithEmail(gomock.Any(), user.Email).Return(user, nil).Times(1)
 
-	_, err := doc.StoreDocument(context.TODO(), file, "doc name", "doc description", user.Email)
+	err := doc.StoreDocument(context.TODO(), file, "doc name", "doc description", user.Email)
 
 	assert.Nil(t, err)
 }

@@ -132,7 +132,7 @@ func TestVerifyNoatrySignature(t *testing.T) {
 
 	// sign document
 	crypto := rsa.New(pr, pu)
-	signedDoc, _ := crypto.Signature(&fileHash)
+	signedDoc, _ := crypto.Signature(fileHash)
 
 	mockDB.EXPECT().GetUserWithId(gomock.Any(), 1).Return(userModel, nil).Times(1)
 	mockDB.EXPECT().GetNoatry(gomock.Any(), 1).Return(noatryModel, nil).Times(1)

@@ -44,7 +44,7 @@ func (r *rest) routes(baseRoute string) {
 		api.POST("/document", func(ctx *gin.Context) {
 			if err := r.handler.StoreDocument(ctx); err != nil {
 				ctx.JSON(http.StatusInternalServerError, gin.H{
-					"error": err.Error(),
+					"error": "internal server error",
 				})
 			} else {
 				ctx.JSON(http.StatusOK, gin.H{
