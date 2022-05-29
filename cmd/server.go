@@ -30,7 +30,7 @@ var ServeCMD = &cli.Command{
 	Action:  serve,
 }
 
-func setupLogOutPut() {
+func setupLoggingOutPut() {
 	f, _ := os.Create(filepath.Join("logs", fmt.Sprintf("%s-%d.log", "notary", rand.Intn(10000))))
 
 	gin.DefaultWriter = io.MultiWriter(f, os.Stdout)
@@ -44,7 +44,7 @@ func serve(c *cli.Context) error {
 		log.Println(err)
 	}
 
-	setupLogOutPut()
+	setupLoggingOutPut()
 	gin.SetMode(cfg.App.Mode)
 
 	db, err := gorm.SetupDatabase(cfg)

@@ -41,6 +41,7 @@ func (d *documentImp) StoreDocument(ctx context.Context, idempotentKey string, d
 	}
 
 	// store document in storage
+	// TODO: store file or encrypted file
 	fileAddress, err := d.Storage.StoreFile(document)
 	if err != nil {
 		return err
