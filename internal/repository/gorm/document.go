@@ -35,10 +35,10 @@ func (db *Gorm) GetDocument(ctx context.Context, documentId int) (model.Document
 	return mapToDocumentEntity(document), nil
 }
 
-func (db *Gorm) GetDocumentAddress(ctx context.Context, documentId int) (string, error) {
+func (db *Gorm) GetDocumentAddress(ctx context.Context, idempotent string) (string, error) {
 	var document Document
 
-	if err := db.Db.WithContext(ctx).Select("FileAddress").Where("id", documentId).First(&document).Error; err != nil {
+	if err := db.Db.WithContext(ctx).Select("FileAddress").Where("idempotent", idempotent).First(&document).Error; err != nil {
 		return "", err
 	}
 

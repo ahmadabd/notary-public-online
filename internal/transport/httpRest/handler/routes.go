@@ -52,5 +52,20 @@ func (r *rest) routes(baseRoute string) {
 				})
 			}
 		})
+
+		api.GET("/document", func(ctx *gin.Context) {
+			file, err := r.handler.GetDocument(ctx)
+
+			if err != nil {
+				ctx.JSON(http.StatusInternalServerError, gin.H{
+					"error": "internal server error",
+				})
+			} else {
+				ctx.Header("Content-Disposition", fmt.Sprintf("attachment; filename=%s", file.Name()))
+				ctx.JSON(http.StatusOK, gin.H{
+					"message": "success",
+				})
+			}
+		})
 	}
 }

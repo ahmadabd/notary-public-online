@@ -54,13 +54,13 @@ func (d *documentImp) DocumentDetails(ctx context.Context, documentId int) (mode
 	return d.Db.GetDocument(ctx, documentId)
 }
 
-func (d *documentImp) ReadDocument(ctx context.Context, documentId int) (*os.File, error) {
+func (d *documentImp) ReadDocument(ctx context.Context, idempotent string) (*os.File, error) {
 
-	document, err := d.Db.GetDocumentAddress(ctx, documentId)
+	documentAddr, err := d.Db.GetDocumentAddress(ctx, idempotent)
 
 	if err != nil {
 		return nil, err
 	}
 
-	return d.Storage.ReadFile(document)
+	return d.Storage.ReadFile(documentAddr)
 }

@@ -156,6 +156,7 @@ func TestReadDocument(t *testing.T) {
 
 	document := model.Document{
 		Name:        "doc name",
+		Idempotent:  "1qaz",
 		Description: "doc description",
 		FileAddress: "fakeFile.txt",
 		UserId:      user.Id,
@@ -170,9 +171,9 @@ func TestReadDocument(t *testing.T) {
 	doc.StoreDocument(context.TODO(), idempotentKey, file, "doc name", "doc description", user.Email)
 
 	// Read Document
-	mockDB.EXPECT().GetDocumentAddress(gomock.Any(), 1).Return("fakeFile.txt", nil).Times(1)
+	mockDB.EXPECT().GetDocumentAddress(gomock.Any(), document.Idempotent).Return("fakeFile.txt", nil).Times(1)
 	mockStorage.EXPECT().ReadFile(gomock.Any()).Return(file, nil).Times(1)
 
-	_, err := doc.ReadDocument(context.TODO(), 1)
+	_, err := doc.ReadDocument(context.TODO(), document.Idempotent)
 	assert.Nil(t, err)
 }

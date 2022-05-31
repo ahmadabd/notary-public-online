@@ -74,3 +74,14 @@ func handleFileUpload(r *gin.Context) (*os.File, error) {
 
 	return f, nil
 }
+
+func (h *handler) GetDocument(ctx *gin.Context) (*os.File, error) {
+	cctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	var documentIdempotent dto.GetDocumentCredential
+
+	ctx.ShouldBindJSON(&documentIdempotent)
+
+	return h.docServ.ReadDocument(cctx, documentIdempotent.Idempotent)
+}

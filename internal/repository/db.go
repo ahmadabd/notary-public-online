@@ -10,7 +10,7 @@ type document interface {
 
 	GetDocument(ctx context.Context, documentId int) (model.Document, error)
 
-	GetDocumentAddress(ctx context.Context, documentId int) (string, error)
+	GetDocumentAddress(ctx context.Context, idempotent string) (string, error)
 
 	GetDocumentHash(ctx context.Context, documentId int) ([]byte, error)
 

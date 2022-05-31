@@ -11,5 +11,5 @@ type Document interface {
 
 	DocumentDetails(ctx context.Context, documentId int) (model.Document, error)
 
-	ReadDocument(ctx context.Context, documentId int) (*os.File, error)
+	ReadDocument(ctx context.Context, idempotent string) (*os.File, error)
 }

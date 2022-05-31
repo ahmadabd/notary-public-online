@@ -139,7 +139,7 @@ func (mr *MockDBMockRecorder) GetDocument(arg0, arg1 interface{}) *gomock.Call {
 }
 
 // GetDocumentAddress mocks base method.
-func (m *MockDB) GetDocumentAddress(arg0 context.Context, arg1 int) (string, error) {
+func (m *MockDB) GetDocumentAddress(arg0 context.Context, arg1 string) (string, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetDocumentAddress", arg0, arg1)
 	ret0, _ := ret[0].(string)
