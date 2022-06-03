@@ -2,11 +2,12 @@ package noatry
 
 import (
 	"context"
+	"notary-public-online/internal/dto"
 	"notary-public-online/internal/entity/model"
 )
 
 type Noatry interface {
-	CreateNoatry(ctx context.Context, documentId int, userId int, partnerCount int, completed bool) (model.Notary, error)
+	CreateNoatry(ctx context.Context, noatryCred *dto.StoreNoatryCredential) error
 
 	GetNoatry(ctx context.Context, noatryId int) (model.Notary, error)
 

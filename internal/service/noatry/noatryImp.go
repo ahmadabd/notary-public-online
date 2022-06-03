@@ -3,6 +3,8 @@ package noatry
 import (
 	"context"
 	"errors"
+	"fmt"
+	"notary-public-online/internal/dto"
 	"notary-public-online/internal/entity/model"
 	"notary-public-online/internal/pkg/pairKey"
 	"notary-public-online/internal/pkg/pairKey/rsa"
@@ -17,8 +19,21 @@ func New(db repository.DB) Noatry {
 	return &doc{Db: db}
 }
 
-func (d *doc) CreateNoatry(ctx context.Context, documentId int, userId int, partnerCount int, completed bool) (model.Notary, error) {
-	return d.Db.CreateNoatry(ctx, documentId, userId, partnerCount, completed)
+func (d *doc) CreateNoatry(ctx context.Context, noatryCred *dto.StoreNoatryCredential) error {
+
+	documentId := d.Db.CheckDocumentIdempotency(ctx, noatryCred.DocumentIdempotent)
+
+	// get user id
+	user, err := d.Db.GetUserWithEmail(ctx, fmt.Sprintf("%s", noatryCred.UserEmail))
+	if err != nil {
+		return err
+	}
+
+	if documentId != 0 {
+		return d.Db.CreateNoatry(ctx, documentId, user.Id, noatryCred.PartnerCount, false)
+	}
+
+	return errors.New("document idempotency not found")
 }
 
 func (d *doc) GetNoatry(ctx context.Context, noatryId int) (model.Notary, error) {

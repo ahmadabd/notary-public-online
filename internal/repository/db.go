@@ -14,11 +14,11 @@ type document interface {
 
 	GetDocumentHash(ctx context.Context, documentId int) ([]byte, error)
 
-	CheckDocumentIdempotency(ctx context.Context, idempotentKey string) bool
+	CheckDocumentIdempotency(ctx context.Context, idempotentKey string) int
 }
 
 type notary interface {
-	CreateNoatry(ctx context.Context, documentId int, userId int, partnerCount int, completed bool) (model.Notary, error)
+	CreateNoatry(ctx context.Context, documentId int, userId int, partnerCount int, completed bool) error
 
 	GetNoatry(ctx context.Context, noatryId int) (model.Notary, error)
 }

@@ -12,6 +12,7 @@ import (
 	"notary-public-online/internal/pkg/storage/disk"
 	"notary-public-online/internal/repository/gorm"
 	"notary-public-online/internal/service/document"
+	"notary-public-online/internal/service/noatry"
 	"notary-public-online/internal/service/user"
 	"notary-public-online/internal/transport/httpRest/handler"
 	"os"
@@ -55,11 +56,11 @@ func serve(c *cli.Context) error {
 	jwtPkg := jwtPkg.JWTAuthService()
 
 	documentService := document.New(db, disk.New())
-	// noatryService := noatry.New(db)
+	noatryService := noatry.New(db)
 	userService := user.New(db, rsa.NewKeys(), passbcrypt.New())
 
 	go func() {
-		if err := handler.New(userService, documentService, jwtPkg).Start(cfg); err != nil {
+		if err := handler.New(userService, documentService, noatryService, jwtPkg).Start(cfg); err != nil {
 			log.Println(err)
 		}
 	}()

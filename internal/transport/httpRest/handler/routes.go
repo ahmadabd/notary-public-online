@@ -9,7 +9,7 @@ import (
 )
 
 func (r *rest) routes(baseRoute string) {
-	user := r.gin.Group(fmt.Sprintf("/%s/user", baseRoute))
+	user := r.gin.Group(fmt.Sprintf("/user/%s", baseRoute))
 	{
 		user.POST("/register", func(ctx *gin.Context) {
 			err := r.handler.RegisterController(ctx)
@@ -39,7 +39,7 @@ func (r *rest) routes(baseRoute string) {
 		})
 	}
 
-	api := r.gin.Group(fmt.Sprintf("/%s/api", baseRoute), middlewares.AuthorizeJWT())
+	api := r.gin.Group(fmt.Sprintf("/api/%s", baseRoute), middlewares.AuthorizeJWT())
 	{
 		api.POST("/document", func(ctx *gin.Context) {
 			if err := r.handler.StoreDocument(ctx); err != nil {
@@ -62,6 +62,20 @@ func (r *rest) routes(baseRoute string) {
 				})
 			} else {
 				ctx.Header("Content-Disposition", fmt.Sprintf("attachment; filename=%s", file.Name()))
+				ctx.JSON(http.StatusOK, gin.H{
+					"message": "success",
+				})
+			}
+		})
+
+		api.POST("/noatry", func(ctx *gin.Context) {
+			err := r.handler.StoreNoatry(ctx)
+			if err != nil {
+				ctx.JSON(http.StatusInternalServerError, gin.H{
+					"error":   "internal server error",
+					"message": err.Error(),
+				})
+			} else {
 				ctx.JSON(http.StatusOK, gin.H{
 					"message": "success",
 				})

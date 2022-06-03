@@ -23,27 +23,24 @@ func (h *handler) StoreDocument(ctx *gin.Context) error {
 		return fmt.Errorf("missing idempotency key")
 	}
 
-	userEmail, exists := ctx.Get("user")
+	userEmail, _ := ctx.Get("user")
 
-	if exists {
+	var document dto.StoreDocumentCredential
 
-		var document dto.StoreDocumentCredential
+	file, err := handleFileUpload(ctx)
 
-		file, err := handleFileUpload(ctx)
+	if err != nil {
+		return err
+	}
 
-		if err != nil {
-			return err
-		}
+	document.Document = file
+	document.Name = ctx.PostForm("name")
+	document.Description = ctx.PostForm("description")
 
-		document.Document = file
-		document.Name = ctx.PostForm("name")
-		document.Description = ctx.PostForm("description")
+	err = h.docServ.StoreDocument(cctx, idempotentKey, document.Document, document.Name, document.Description, fmt.Sprintf("%v", userEmail))
 
-		err = h.docServ.StoreDocument(cctx, idempotentKey, document.Document, document.Name, document.Description, fmt.Sprintf("%v", userEmail))
-
-		if err != nil {
-			return err
-		}
+	if err != nil {
+		return err
 	}
 
 	return nil

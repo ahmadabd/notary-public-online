@@ -3,6 +3,7 @@ package noatry_test
 import (
 	"context"
 	"log"
+	"notary-public-online/internal/dto"
 	"notary-public-online/internal/entity/model"
 	"notary-public-online/internal/pkg/hash/sha256"
 	"notary-public-online/internal/pkg/pairKey/rsa"
@@ -45,15 +46,22 @@ func TestCreateNoatry(t *testing.T) {
 	notary := model.Notary{
 		DocumentId:   1,
 		UserId:       1,
-		PartnerCount: 1,
+		PartnerCount: 2,
 		Completed:    false,
 	}
 
-	mockDB.EXPECT().CreateNoatry(gomock.Any(), notary.DocumentId, notary.UserId, notary.PartnerCount, notary.Completed).Return(notary, nil).Times(1)
+	user := model.User{
+		Id:    1,
+		Email: "ahmad@gmail.com",
+	}
+
+	mockDB.EXPECT().CheckDocumentIdempotency(gomock.Any(), "1qaz").Return(1).Times(1)
+	mockDB.EXPECT().GetUserWithEmail(gomock.Any(), "ahmad@gmail.com").Return(user, nil).Times(1)
+	mockDB.EXPECT().CreateNoatry(gomock.Any(), notary.DocumentId, notary.UserId, notary.PartnerCount, notary.Completed).Return(nil).Times(1)
 
 	noatry := noatry.New(mockDB)
 
-	_, err := noatry.CreateNoatry(context.TODO(), 1, 1, 1, false)
+	err := noatry.CreateNoatry(context.TODO(), &dto.StoreNoatryCredential{UserEmail: "ahmad@gmail.com", DocumentIdempotent: "1qaz", PartnerCount: 2})
 
 	assert.Nil(t, err)
 }

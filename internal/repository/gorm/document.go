@@ -55,14 +55,17 @@ func (db *Gorm) GetDocumentHash(ctx context.Context, documentId int) ([]byte, er
 	return document.Hash, nil
 }
 
-func (db *Gorm) CheckDocumentIdempotency(ctx context.Context, idempotentKey string) bool {
-	if err := db.Db.WithContext(ctx).Where("idempotent", idempotentKey).First(&Document{}).Error; err != nil {
+func (db *Gorm) CheckDocumentIdempotency(ctx context.Context, idempotentKey string) int {
+
+	var document Document
+
+	if err := db.Db.WithContext(ctx).Where("idempotent", idempotentKey).First(&document).Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
-			return false
+			return 0
 		}
 
-		return false
+		return 0
 	}
 
-	return true
+	return document.Id
 }

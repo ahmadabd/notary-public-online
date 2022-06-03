@@ -52,7 +52,7 @@ func TestStoreDocumentWithDuplicatedIdempotenct(t *testing.T) {
 
 	idempotentKey := "1qaz"
 
-	mockDB.EXPECT().CheckDocumentIdempotency(gomock.Any(), idempotentKey).Return(true).Times(1)
+	mockDB.EXPECT().CheckDocumentIdempotency(gomock.Any(), idempotentKey).Return(1).Times(1)
 	mockDB.EXPECT().GetUserWithEmail(gomock.Any(), user.Email).Return(user, nil).Times(1)
 
 	err := doc.StoreDocument(context.TODO(), idempotentKey, file, "doc name", "doc description", user.Email)
@@ -83,7 +83,7 @@ func TestStoreDocument(t *testing.T) {
 
 	idempotentKey := "1qaz"
 
-	mockDB.EXPECT().CheckDocumentIdempotency(gomock.Any(), idempotentKey).Return(false).Times(1)
+	mockDB.EXPECT().CheckDocumentIdempotency(gomock.Any(), idempotentKey).Return(0).Times(1)
 	mockDB.EXPECT().CreateDocument(gomock.Any(), idempotentKey, document.Name, document.Description, document.FileAddress, gomock.Any(), document.UserId, false).Return(nil).Times(1)
 	mockDB.EXPECT().GetUserWithEmail(gomock.Any(), user.Email).Return(user, nil).Times(1)
 	mockStorage.EXPECT().StoreFile(file).Return("fakeFile.txt", nil).Times(1)
@@ -118,7 +118,7 @@ func TestStoreDocumentIntegration(t *testing.T) {
 
 	idempotentKey := "1qaz"
 
-	mockDB.EXPECT().CheckDocumentIdempotency(gomock.Any(), idempotentKey).Return(false).Times(1)
+	mockDB.EXPECT().CheckDocumentIdempotency(gomock.Any(), idempotentKey).Return(0).Times(1)
 	mockDB.EXPECT().CreateDocument(gomock.Any(), idempotentKey, document.Name, document.Description, gomock.Any(), gomock.Any(), 1, false).Return(nil).Times(1)
 	mockDB.EXPECT().GetUserWithEmail(gomock.Any(), user.Email).Return(user, nil).Times(1)
 
@@ -164,7 +164,7 @@ func TestReadDocument(t *testing.T) {
 
 	idempotentKey := "1qaz"
 
-	mockDB.EXPECT().CheckDocumentIdempotency(gomock.Any(), idempotentKey).Return(false).Times(1)
+	mockDB.EXPECT().CheckDocumentIdempotency(gomock.Any(), idempotentKey).Return(0).Times(1)
 	mockDB.EXPECT().CreateDocument(gomock.Any(), idempotentKey, document.Name, document.Description, document.FileAddress, gomock.Any(), document.UserId, false).Return(nil).Times(1)
 	mockDB.EXPECT().GetUserWithEmail(gomock.Any(), user.Email).Return(user, nil).Times(1)
 	mockStorage.EXPECT().StoreFile(file).Return("fakeFile.txt", nil).Times(1)

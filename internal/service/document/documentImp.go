@@ -28,7 +28,7 @@ func (d *documentImp) StoreDocument(ctx context.Context, idempotentKey string, d
 	}
 
 	// check idempotency
-	if d.Db.CheckDocumentIdempotency(ctx, idempotentKey) {
+	if d.Db.CheckDocumentIdempotency(ctx, idempotentKey) != 0 {
 		log.Println("Item with this idempotent key already exists")
 		return nil
 	}

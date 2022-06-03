@@ -36,10 +36,10 @@ func (m *MockDB) EXPECT() *MockDBMockRecorder {
 }
 
 // CheckDocumentIdempotency mocks base method.
-func (m *MockDB) CheckDocumentIdempotency(arg0 context.Context, arg1 string) bool {
+func (m *MockDB) CheckDocumentIdempotency(arg0 context.Context, arg1 string) int {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CheckDocumentIdempotency", arg0, arg1)
-	ret0, _ := ret[0].(bool)
+	ret0, _ := ret[0].(int)
 	return ret0
 }
 
@@ -79,12 +79,11 @@ func (mr *MockDBMockRecorder) CreateDocument(arg0, arg1, arg2, arg3, arg4, arg5,
 }
 
 // CreateNoatry mocks base method.
-func (m *MockDB) CreateNoatry(arg0 context.Context, arg1, arg2, arg3 int, arg4 bool) (model.Notary, error) {
+func (m *MockDB) CreateNoatry(arg0 context.Context, arg1, arg2, arg3 int, arg4 bool) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateNoatry", arg0, arg1, arg2, arg3, arg4)
-	ret0, _ := ret[0].(model.Notary)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	ret0, _ := ret[0].(error)
+	return ret0
 }
 
 // CreateNoatry indicates an expected call of CreateNoatry.

@@ -5,6 +5,7 @@ import (
 	"notary-public-online/internal/configs/yaml"
 	"notary-public-online/internal/pkg/jwtPkg"
 	"notary-public-online/internal/service/document"
+	"notary-public-online/internal/service/noatry"
 	"notary-public-online/internal/service/user"
 	"notary-public-online/internal/transport/httpRest"
 
@@ -16,13 +17,14 @@ type rest struct {
 	handler *handler
 }
 
-func New(userServ user.User, docServ document.Document, jwtPkg jwtPkg.Jwt) httpRest.Rest {
+func New(userServ user.User, docServ document.Document, noatryService noatry.Noatry, jwtPkg jwtPkg.Jwt) httpRest.Rest {
 	return &rest{
 		gin: gin.Default(),
 		handler: &handler{
-			userServ: userServ,
-			docServ:  docServ,
-			jwtPkg:   jwtPkg,
+			userServ:   userServ,
+			docServ:    docServ,
+			noatryServ: noatryService,
+			jwtPkg:     jwtPkg,
 		},
 	}
 }
